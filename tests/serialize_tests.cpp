@@ -1,7 +1,5 @@
-// Boost.Test
 #include <boost/test/unit_test.hpp>
 using boost::unit_test_framework::test_suite;
-
 
 extern "C"
 {
@@ -32,7 +30,28 @@ static const unsigned char numeric_data[] = {
     0xD2, 0xF8, 0x00, 0x00, 0x00     // INT32 -134217728
 };
 
-BOOST_AUTO_TEST_CASE( pack_test_numeric )
+static unsigned char raw_data[] = {
+    // "TEST"
+    0xA5, 0x54, 0x45, 0x53, 0x54, 0x00,
+
+    // "012345678901234567890123456789"
+    0xBF, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
+    0x37, 0x38, 0x39, 0x30, 0x31, 0x32, 0x33, 0x34,
+    0x35, 0x36, 0x37, 0x38, 0x39, 0x30, 0x31, 0x32,
+    0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x00,
+
+    // "ABCDEFGHIJKLMNOPQRSTUVWXYZabcde"
+    0xDA, 0x00, 0x20, 0x41, 0x42, 0x43, 0x44, 0x45,
+    0x46, 0x47, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D,
+    0x4E, 0x4F, 0x50, 0x51, 0x52, 0x53, 0x54, 0x55,
+    0x56, 0x57, 0x58, 0x59, 0x5A, 0x61, 0x62, 0x63,
+    0x64, 0x65, 0x00,
+
+    // NIL
+    0xC0
+};
+
+void pack_test_numeric( void )
 {
     int size1 = 0;
     unsigned char buf1[1024];
@@ -86,7 +105,7 @@ BOOST_AUTO_TEST_CASE( pack_test_numeric )
     BOOST_CHECK_EQUAL(memcmp( buf1, buf2, size1 ), 0 );
 }
 
-BOOST_AUTO_TEST_CASE( unpack_test_numeric )
+void unpack_test_numeric( void )
 {
     size_t pos = 0;
     unpack_info_t info;
@@ -183,29 +202,8 @@ BOOST_AUTO_TEST_CASE( unpack_test_numeric )
     pos += info.size;
     
 }
-static unsigned char raw_data[] = {
-    // "TEST"
-    0xA5, 0x54, 0x45, 0x53, 0x54, 0x00,
 
-    // "012345678901234567890123456789"
-    0xBF, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36,
-    0x37, 0x38, 0x39, 0x30, 0x31, 0x32, 0x33, 0x34,
-    0x35, 0x36, 0x37, 0x38, 0x39, 0x30, 0x31, 0x32,
-    0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x00,
-
-    // "ABCDEFGHIJKLMNOPQRSTUVWXYZabcde"
-    0xDA, 0x00, 0x20, 0x41, 0x42, 0x43, 0x44, 0x45,
-    0x46, 0x47, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D,
-    0x4E, 0x4F, 0x50, 0x51, 0x52, 0x53, 0x54, 0x55,
-    0x56, 0x57, 0x58, 0x59, 0x5A, 0x61, 0x62, 0x63,
-    0x64, 0x65, 0x00,
-
-    // NIL
-    0xC0
-};
-
-
-BOOST_AUTO_TEST_CASE( pack_test_raw )
+void pack_test_raw( void )
 {
     int size = 0;
     unsigned char buf[1024];
@@ -219,7 +217,7 @@ BOOST_AUTO_TEST_CASE( pack_test_raw )
     BOOST_CHECK_EQUAL( memcmp( buf, raw_data, size ), 0 );
 }
 
-BOOST_AUTO_TEST_CASE( unpack_test_raw )
+void unpack_test_raw( void )
 {
     size_t pos = 0;
     unpack_info_t info;
@@ -251,7 +249,7 @@ BOOST_AUTO_TEST_CASE( unpack_test_raw )
 
 }
 
-BOOST_AUTO_TEST_CASE( pack_test_raw32 )
+void pack_test_raw32( void )
 {
     int i = 0, data_size = 131072, size = 0;
     unsigned char *test_data = (unsigned char *)malloc( data_size );
@@ -276,7 +274,7 @@ BOOST_AUTO_TEST_CASE( pack_test_raw32 )
     free(buf);
 }
 
-BOOST_AUTO_TEST_CASE( unpack_test_raw32 )
+void unpack_test_raw32( void )
 {
     unpack_ex_info_t info;
     int i = 0, size = 0, data_size = 131072;
@@ -304,7 +302,7 @@ BOOST_AUTO_TEST_CASE( unpack_test_raw32 )
     free(test_data);
 }
 
-BOOST_AUTO_TEST_CASE( unpack_ex_test )
+void unpack_ex_test( void )
 {
     unpack_ex_info_t info;
     int size = 0;
@@ -399,7 +397,6 @@ BOOST_AUTO_TEST_CASE( unpack_ex_test )
     BOOST_CHECK_EQUAL( info.value.raw_value.size, 32u );
     BOOST_CHECK_EQUAL( strcmp("ABCDEFGHIJKLMNOPQRSTUVWXYZabcde", (char *)info.value.raw_value.data), 0 );
 }
-
 
 
 
