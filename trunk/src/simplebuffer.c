@@ -2,17 +2,19 @@
 
 #include "simplebuffer.h"
 
-#ifndef MINIMUM_ALLOCATE_UNIT
-#define MINIMUM_ALLOCATE_UNIT (1024)
-#endif
+static size_t s_minimum_allocate_unit = 0;
+static uint8_t* (*s_allocate_function)( size_t size ) = 0;
+static void (*s_free_function)( void *buf ) = 0;
 
-#ifndef MALLOC
-#define MALLOC(xSize) (uint8_t*)malloc(xSize)
-#endif
+void simplebuffer_system_init( size_t _minimum_allocate_unit,
+                               uint8_t* (*_allocate_function)( size_t size ),
+                               void (*_free_function)( void * ) )
+{
+    s_minimum_allocate_unit = _minimum_allocate_unit;
+    s_allocate_function = _allocate_function;
+    s_free_function = _free_function;
+}
 
-#ifndef FREE
-#define FREE(xBuf) free(xBuf)
-#endif
 
 void simplebuffer_init( simplebuffer *buf )
 {
@@ -23,8 +25,11 @@ bool simplebuffer_checksize( simplebuffer *buf, size_t size )
 {
     if( buf->alloc < buf->size + size )
     {
-        size_t newsize = buf->size + size + MINIMUM_ALLOCATE_UNIT;
-        uint8_t *newdata = MALLOC( newsize );
+        // 次に確保するサイズを決定する
+        size_t unit = (size>s_minimum_allocate_unit) ? size : s_minimum_allocate_unit;
+        size_t newsize = buf->size + size + unit;
+        
+        uint8_t *newdata = s_allocate_function( newsize );
         if( newdata == NULL )
         {
             return false;
@@ -33,21 +38,47 @@ bool simplebuffer_checksize( simplebuffer *buf, size_t size )
         {
             memcpy( newdata, buf->data, buf->size );
         }
-        FREE( buf->data );
-        buf->size += size;
+
+        /// allocateされていないバッファも取り扱いたい
+        if( buf->alloc != 0 )
+        {
+            s_free_function( buf->data );
+        }
+
         buf->data  = newdata;
         buf->alloc = newsize;
     }
+    buf->size += size;
     return true;
+}
+
+bool simplebuffer_write( simplebuffer *buf, uint8_t* data, size_t size )
+{
+    size_t currentsize = buf->size;
+    if( simplebuffer_checksize( buf, size ) )
+    {
+        memcpy( buf->data + currentsize, data, size );
+        return true;
+    }
+    return false;
 }
 
 void simplebuffer_destroy( simplebuffer *buf )
 {
-    if( buf->data != NULL )
+    /// allocateされていないバッファも取り扱いたい
+    if( buf->alloc != 0 ) 
     {
-        FREE( buf->data );
+        s_free_function( buf->data );
     }
     simplebuffer_init( buf );
 }
+
+uint8_t* simplebuffer_release( simplebuffer *buf )
+{
+    uint8_t* data = buf->data;
+    simplebuffer_init( buf );
+    return data;
+}
+
 
 

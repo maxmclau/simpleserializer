@@ -11,19 +11,25 @@
 /// This is very simple serializer for embedded use.
 /// 
 
-int pack_fixuint( unsigned char *buffer, uint8_t data );
-int pack_uint8( unsigned char *buffer, uint8_t data );
-int pack_uint16( unsigned char *buffer, uint16_t data );
-int pack_uint32( unsigned char *buffer, uint32_t data );
-int pack_fixint( unsigned char *buffer, int8_t data );
-int pack_int8( unsigned char *buffer, int8_t data );
-int pack_int16( unsigned char *buffer, int16_t data );
-int pack_int32( unsigned char *buffer, int32_t data );
+int pack_nil( uint8_t* buffer );
+int pack_bool( uint8_t* buffer, bool data );
+int pack_fixuint( uint8_t* buffer, uint8_t data );
+int pack_float( uint8_t* buffer, float data );
+int pack_uint8( uint8_t* buffer, uint8_t data );
+int pack_uint16( uint8_t* buffer, uint16_t data );
+int pack_uint32( uint8_t* buffer, uint32_t data );
+int pack_fixint( uint8_t* buffer, int8_t data );
+int pack_int8( uint8_t* buffer, int8_t data );
+int pack_int16( uint8_t* buffer, int16_t data );
+int pack_int32( uint8_t* buffer, int32_t data );
 
-int pack_nil( unsigned char *buffer );
-int pack_bool( unsigned char *buffer, bool data );
-int pack_uint( unsigned char *buffer, unsigned int data );
-int pack_int( unsigned char *buffer, int data );
-int pack_raw( unsigned char *buffer, unsigned char *data, size_t size );
+int pack_uint( uint8_t* buffer, unsigned int data );
+int pack_int( uint8_t* buffer, int data );
+int pack_raw( uint8_t* buffer, uint8_t* data, size_t size );
+
+#ifdef SUPPORT_64BIT_VALUE
+int pack_double( uint8_t* buffer, double data );
+#endif
+
 
 #endif //H_PACK_H_100629195457__
