@@ -1,4 +1,6 @@
 #include <boost/test/unit_test.hpp>
+#include <float.h>
+
 using boost::unit_test_framework::test_suite;
 
 extern "C"
@@ -7,11 +9,18 @@ extern "C"
 #include "unpack.h"
 }
 
-
 static const unsigned char numeric_data[] = {
     0xC0,                            // NIL
-    0xC2,                            // FALSE
-    0xC3,                            // TRUE
+    0xC4,                            // FALSE
+    0xC8,                            // TRUE
+    0xCA, 0x7E, 0xFF, 0xFF, 0xFF,    // FLOAT  FLT_MAX/2
+    0xCA, 0x00, 0x40, 0x00, 0x00,    // FLOAT  FLT_MIN/2
+#ifdef SUPPORT_64BIT_VALUE
+    0xCB, 0x7F, 0xF0, 0x00, 0x00,    // DOUBLE FLT_MAX*2
+    0x00, 0x00, 0x00, 0x00,
+    0xCB, 0x38, 0x20, 0x00, 0x00,    // DOUBLE FLT_MIN*2
+    0x00, 0x00, 0x00, 0x00,
+#endif
     0x00,                            // FIXUINT 0
     0x7F,                            // FIXUINT 127
     0xCC, 0x80,                      // UINT8 128
@@ -41,7 +50,7 @@ static unsigned char raw_data[] = {
     0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x00,
 
     // "ABCDEFGHIJKLMNOPQRSTUVWXYZabcde"
-    0xDA, 0x00, 0x20, 0x41, 0x42, 0x43, 0x44, 0x45,
+    0xC1, 0x00, 0x20, 0x41, 0x42, 0x43, 0x44, 0x45,
     0x46, 0x47, 0x48, 0x49, 0x4A, 0x4B, 0x4C, 0x4D,
     0x4E, 0x4F, 0x50, 0x51, 0x52, 0x53, 0x54, 0x55,
     0x56, 0x57, 0x58, 0x59, 0x5A, 0x61, 0x62, 0x63,
@@ -61,6 +70,12 @@ void pack_test_numeric( void )
     size1 += pack_nil( &(buf1[size1]) );
     size1 += pack_bool( &(buf1[size1]), false );
     size1 += pack_bool( &(buf1[size1]), true );
+    size1 += pack_float( &(buf1[size1]), FLT_MAX/2 );
+    size1 += pack_float( &(buf1[size1]), FLT_MIN/2 );
+#ifdef SUPPORT_64BIT_VALUE
+    size1 += pack_double( &(buf1[size1]), FLT_MAX*2 );
+    size1 += pack_double( &(buf1[size1]), FLT_MIN*2 );
+#endif
     size1 += pack_fixuint( &(buf1[size1]), 0 );
     size1 += pack_fixuint( &(buf1[size1]), 127 );
     size1 += pack_uint8( &(buf1[size1]), 128 );
@@ -81,6 +96,12 @@ void pack_test_numeric( void )
     size2 += pack_nil( &(buf2[size2]) );
     size2 += pack_bool( &(buf2[size2]), false );
     size2 += pack_bool( &(buf2[size2]), true );
+    size2 += pack_float( &(buf2[size2]), FLT_MAX/2 );
+    size2 += pack_float( &(buf2[size2]), FLT_MIN/2 );
+#ifdef SUPPORT_64BIT_VALUE
+    size2 += pack_double( &(buf2[size2]), FLT_MAX*2 );
+    size2 += pack_double( &(buf2[size2]), FLT_MIN*2 );
+#endif
     size2 += pack_int( &(buf2[size2]), 0 );
     size2 += pack_int( &(buf2[size2]), 127 );
     size2 += pack_int( &(buf2[size2]), 128 );
@@ -121,6 +142,28 @@ void unpack_test_numeric( void )
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_TRUE );
     pos += info.size;
 
+    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_FLOAT );
+    BOOST_CHECK_EQUAL( info.value.float_value, FLT_MAX/2 );
+    pos += info.size;
+
+    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_FLOAT );
+    BOOST_CHECK_EQUAL( info.value.float_value, FLT_MIN/2 );
+    pos += info.size;
+
+#ifdef SUPPORT_64BIT_VALUE
+    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_DOUBLE );
+    BOOST_CHECK_EQUAL( info.value.double_value, FLT_MAX*2 );
+    pos += info.size;
+
+    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_DOUBLE );
+    BOOST_CHECK_EQUAL( info.value.double_value, FLT_MIN*2 );
+    pos += info.size;
+#endif
+    
     info = unpack( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_POSITIVE_FIXNUM );
     BOOST_CHECK_EQUAL( info.value.uint8_value, 0 );
@@ -262,7 +305,7 @@ void pack_test_raw32( void )
     
     size += pack_raw( &(buf[size]), test_data, data_size );
     size += pack_nil( &(buf[size]));
-    BOOST_CHECK_EQUAL( *buf,     0xDB );
+    BOOST_CHECK_EQUAL( *buf,     0xc2 );
     BOOST_CHECK_EQUAL( *(buf+1), 0x00 );
     BOOST_CHECK_EQUAL( *(buf+2), 0x02 );
     BOOST_CHECK_EQUAL( *(buf+3), 0x00 );
@@ -280,7 +323,7 @@ void unpack_test_raw32( void )
     int i = 0, size = 0, data_size = 131072;
     unsigned char *test_data = (unsigned char *)malloc( data_size + 10 );
 
-    *test_data = 0xdb;
+    *test_data = 0xc2;
     *(test_data+1) = 0x00;
     *(test_data+2) = 0x02;
     *(test_data+3) = 0x00;
@@ -316,6 +359,13 @@ void unpack_ex_test( void )
     size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
     BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_BOOL );
     BOOST_CHECK_EQUAL( info.value.bool_value, true );
+    
+    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
+    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
+#ifdef SUPPORT_64BIT_VALUE
+    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
+    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
+#endif
     
     size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
     BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_UINT );

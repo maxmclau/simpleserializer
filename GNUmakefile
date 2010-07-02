@@ -1,6 +1,7 @@
 CC=gcc
 CXX=g++
 
+CFLAGS   += -DSUPPORT_64BIT_VALUE
 CFLAGS   += -Wall -O 
 CXXFLAGS += $(CFLAGS)
 

@@ -15,69 +15,26 @@
     *xBuf++ = (unsigned char)((uint32_t)xData >> 16);    \
     *xBuf++ = (unsigned char)((uint32_t)xData >> 8);     \
     *xBuf++ = (unsigned char)((uint32_t)xData);  
-    
 
-int pack_fixuint( unsigned char *buffer, uint8_t data )
-{
-    PACK_8BIT_VALUE( buffer, data );
-    return 1;
-}
+#ifdef SUPPORT_64BIT_VALUE
+#define PACK_64BIT_VALUE( xBuf, xData )                  \
+    *xBuf++ = (unsigned char)((uint64_t)xData >> 56);    \
+    *xBuf++ = (unsigned char)((uint64_t)xData >> 48);    \
+    *xBuf++ = (unsigned char)((uint64_t)xData >> 40);    \
+    *xBuf++ = (unsigned char)((uint64_t)xData >> 32);    \
+    *xBuf++ = (unsigned char)((uint64_t)xData >> 24);    \
+    *xBuf++ = (unsigned char)((uint64_t)xData >> 16);    \
+    *xBuf++ = (unsigned char)((uint64_t)xData >> 8);     \
+    *xBuf++ = (unsigned char)((uint64_t)xData);  
+#endif    
 
-int pack_uint8( unsigned char *buffer, uint8_t data )
-{
-    *buffer++ = TYPE_VALIABLE_UINT8;
-    PACK_8BIT_VALUE( buffer, data );
-    return 2;
-}
-
-int pack_uint16( unsigned char *buffer, uint16_t data )
-{
-    *buffer++ = TYPE_VALIABLE_UINT16;
-    PACK_16BIT_VALUE( buffer, data );
-    return 3;
-}
-
-int pack_uint32( unsigned char *buffer, uint32_t data )
-{
-    *buffer++ = TYPE_VALIABLE_UINT32;
-    PACK_32BIT_VALUE( buffer, data );
-    return 5;
-}
-
-int pack_fixint( unsigned char *buffer, int8_t data )
-{
-    PACK_8BIT_VALUE( buffer, (TYPE_FIXROW | (unsigned char)data) );
-    return 1;
-}
-
-int pack_int8( unsigned char *buffer, int8_t data )
-{
-    *buffer++ = TYPE_VALIABLE_INT8;
-    PACK_8BIT_VALUE( buffer, data );
-    return 2;
-}
-
-int pack_int16( unsigned char *buffer, int16_t data )
-{
-    *buffer++ = TYPE_VALIABLE_INT16;
-    PACK_16BIT_VALUE( buffer, data );
-    return 3;
-}
-
-int pack_int32( unsigned char *buffer, int32_t data )
-{
-    *buffer++ = TYPE_VALIABLE_INT32;
-    PACK_32BIT_VALUE( buffer, data );
-    return 5;
-}
-
-int pack_nil( unsigned char *buffer )
+int pack_nil( uint8_t* buffer )
 {
     *buffer = TYPE_VALIABLE_NIL;
     return 1;
 }
 
-int pack_bool( unsigned char *buffer, bool data )
+int pack_bool( uint8_t* buffer, bool data )
 {
     if( data )
     {
@@ -90,17 +47,91 @@ int pack_bool( unsigned char *buffer, bool data )
     return 1;
 }
 
-int pack_uint( unsigned char *buffer, unsigned int data )
+int pack_float( uint8_t* buffer, float data )
+{
+	union { float f; uint32_t i; } mem;
+	mem.f = data;
+    *buffer++ = TYPE_VALIABLE_FLOAT;
+    PACK_32BIT_VALUE( buffer, mem.i );
+    return 5;
+}
+
+#ifdef SUPPORT_64BIT_VALUE
+int pack_double( uint8_t* buffer, double data )
+{
+	union { double d; uint64_t i; } mem;
+	mem.d = data;
+    *buffer++ = TYPE_VALIABLE_DOUBLE;
+    PACK_64BIT_VALUE( buffer, mem.i );
+    return 9;
+}
+#endif
+
+int pack_fixuint( uint8_t* buffer, uint8_t data )
+{
+    PACK_8BIT_VALUE( buffer, data );
+    return 1;
+}
+
+int pack_uint8( uint8_t* buffer, uint8_t data )
+{
+    *buffer++ = TYPE_VALIABLE_UINT8;
+    PACK_8BIT_VALUE( buffer, data );
+    return 2;
+}
+
+int pack_uint16( uint8_t* buffer, uint16_t data )
+{
+    *buffer++ = TYPE_VALIABLE_UINT16;
+    PACK_16BIT_VALUE( buffer, data );
+    return 3;
+}
+
+int pack_uint32( uint8_t* buffer, uint32_t data )
+{
+    *buffer++ = TYPE_VALIABLE_UINT32;
+    PACK_32BIT_VALUE( buffer, data );
+    return 5;
+}
+
+int pack_fixint( uint8_t* buffer, int8_t data )
+{
+    PACK_8BIT_VALUE( buffer, (TYPE_FIXROW | (unsigned char)data) );
+    return 1;
+}
+
+int pack_int8( uint8_t* buffer, int8_t data )
+{
+    *buffer++ = TYPE_VALIABLE_INT8;
+    PACK_8BIT_VALUE( buffer, data );
+    return 2;
+}
+
+int pack_int16( uint8_t* buffer, int16_t data )
+{
+    *buffer++ = TYPE_VALIABLE_INT16;
+    PACK_16BIT_VALUE( buffer, data );
+    return 3;
+}
+
+int pack_int32( uint8_t* buffer, int32_t data )
+{
+    *buffer++ = TYPE_VALIABLE_INT32;
+    PACK_32BIT_VALUE( buffer, data );
+    return 5;
+}
+
+int pack_uint( uint8_t* buffer, unsigned int data )
 {
     if( data < 0x80 )
     {
         return pack_fixuint( buffer, (uint8_t)data );
     }
-    else if( data < 0x100 )
+    else if( data <= UINT8_MAX )
     {
         return pack_uint8( buffer, (uint8_t)data );
     }
-    else if( data < 0x10000 )
+    else if( data <= UINT16_MAX )
     {
         return pack_uint16( buffer, (uint16_t)data );
     }
@@ -110,7 +141,7 @@ int pack_uint( unsigned char *buffer, unsigned int data )
     }
 }
 
-int pack_int(  unsigned char *buffer, int data )
+int pack_int(  uint8_t* buffer, int data )
 {
     if( data >= 0 )
     {
@@ -120,11 +151,11 @@ int pack_int(  unsigned char *buffer, int data )
     {
         return pack_fixint( buffer, (int8_t)data );
     }
-    else if( data >= -128 )
+    else if( data >= INT8_MIN )
     {
         return pack_int8( buffer, (int8_t)data );
     }
-    else if( data >= -32768 )
+    else if( data >= INT16_MIN )
     {
         return pack_int16( buffer, (int16_t)data );
     }
@@ -134,7 +165,7 @@ int pack_int(  unsigned char *buffer, int data )
     }
 }
 
-int pack_raw( unsigned char *buffer, unsigned char *data, size_t data_size )
+int pack_raw( uint8_t* buffer, uint8_t* data, size_t data_size )
 {
     int size = 0;
     if( data_size < 32 )
