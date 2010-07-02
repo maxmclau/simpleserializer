@@ -15,6 +15,8 @@ LIBS     += -lboost_unit_test_framework
 
 all: test.exe
 OBJS += src/pack.o src/unpack.o
+OBJS += src/simplebuffer.o
+
 OBJS += tests/test_main.o
 OBJS += tests/serialize_tests.o
 OBJS += tests/simplebuffer_tests.o
