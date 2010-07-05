@@ -1,6 +1,6 @@
 ###################################################################################
-# GCC用設定
-# コマンド名
+# Settings for GCC
+
 #
 #  Copyright (c) 2010  Yukio Obuchi
 # 
@@ -24,19 +24,23 @@
 #  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #
+
+###################################################################################
+# Command names.
+
 CC     :=gcc
 CXX    :=g++
 AS     :=$(CC) -x assembler-with-cpp
 AR     :=$(GCC_PREFIX)ar
 RANLIB :=$(GCC_PREFIX)ranlib
 
-# デフォルト
+# Defalut options.
 ASFLAGS += -finput-charset=utf-8 -fexec-charset=utf-8
 CFLAGS  += -finput-charset=utf-8 -fexec-charset=utf-8
 CXXFLAGS += -Wall #-Wno-non-virtual-dtor
 LDFLAGS +=
 
-# コンパイル
+# Compile rules
 define COMPILE_s
 	@echo Compiling $<
 	@$(AS) -c $(ASFLAGS)  $< -o $@
@@ -61,14 +65,15 @@ ifneq ($(strip $(filter %.m, $(SOURCES))),)
 	LIBRARIES += -lobjc
 endif
 
-# リンク
+# Link
 
-# リンカとしてg++を利用する。
+# Use g++ as linker.
 define LINK_objs
 	@echo Linking CXX
 	@$(CXX) $(LDFLAGS) -o $@ $(OBJECTS) $(LIBS) $(LIBRARIES)
 endef
-# C++が無ければ、リンカとしてgccを利用する。
+
+# If there is no C++ code, use gcc as linker.
 ifeq ($(strip $(filter %$(CXXEXT), $(SOURCES))),)
 define LINK_objs
 	@echo Linking C
