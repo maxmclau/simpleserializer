@@ -32,9 +32,9 @@
     (uint64_t)*(d+7)
 #endif
 
-unpack_info_t unpack( uint8_t* buf )
+unpack_base_info_t unpack_base( uint8_t* buf )
 {
-    unpack_info_t info = {0};
+    unpack_base_info_t info = {0};
     unsigned char header = (uint8_t)(UNPACK_GET_8BIT_VALUE(buf));
     buf++;
 
@@ -161,62 +161,62 @@ unpack_info_t unpack( uint8_t* buf )
     return info;
 }
 
-int unpack_ex( unpack_ex_info_t *info_ex, uint8_t* buf )
+int unpack( unpack_info_t *info, uint8_t* buf )
 {
-    unpack_info_t info = unpack( buf );
-    int size = info.size;
-    if( info.type == TYPE_VALIABLE_NIL )
+    unpack_base_info_t info_base = unpack_base( buf );
+    int size = info_base.size;
+    if( info_base.type == TYPE_VALIABLE_NIL )
     {
-        info_ex->type = UNPACK_TYPE_NIL;
+        info->type = UNPACK_TYPE_NIL;
     }
-    else if( info.type == TYPE_VALIABLE_FALSE )
+    else if( info_base.type == TYPE_VALIABLE_FALSE )
     {
-        info_ex->type = UNPACK_TYPE_BOOL;
-        info_ex->value.bool_value = false;
+        info->type = UNPACK_TYPE_BOOL;
+        info->value.bool_value = false;
     }
-    else if( info.type == TYPE_VALIABLE_TRUE )
+    else if( info_base.type == TYPE_VALIABLE_TRUE )
     {
-        info_ex->type = UNPACK_TYPE_BOOL;
-        info_ex->value.bool_value = true;
+        info->type = UNPACK_TYPE_BOOL;
+        info->value.bool_value = true;
     }
-    else if( info.type == TYPE_POSITIVE_FIXNUM || info.type == TYPE_VALIABLE_UINT8 )
+    else if( info_base.type == TYPE_POSITIVE_FIXNUM || info_base.type == TYPE_VALIABLE_UINT8 )
     {
-        info_ex->type = UNPACK_TYPE_UINT;
-        info_ex->value.uint_value = (unsigned int)info.value.uint8_value;
+        info->type = UNPACK_TYPE_UINT;
+        info->value.uint_value = (unsigned int)info_base.value.uint8_value;
     }
-    else if( info.type == TYPE_VALIABLE_UINT16 )
+    else if( info_base.type == TYPE_VALIABLE_UINT16 )
     {
-        info_ex->type = UNPACK_TYPE_UINT;
-        info_ex->value.uint_value = (unsigned int)info.value.uint16_value;
+        info->type = UNPACK_TYPE_UINT;
+        info->value.uint_value = (unsigned int)info_base.value.uint16_value;
     }
-    else if( info.type == TYPE_VALIABLE_UINT32 )
+    else if( info_base.type == TYPE_VALIABLE_UINT32 )
     {
-        info_ex->type = UNPACK_TYPE_UINT;
-        info_ex->value.uint_value = (unsigned int)info.value.uint32_value;
+        info->type = UNPACK_TYPE_UINT;
+        info->value.uint_value = (unsigned int)info_base.value.uint32_value;
     }
-    else if( info.type == TYPE_NEGATIVE_FIXNUM || info.type == TYPE_VALIABLE_INT8 )
+    else if( info_base.type == TYPE_NEGATIVE_FIXNUM || info_base.type == TYPE_VALIABLE_INT8 )
     {
-        info_ex->type = UNPACK_TYPE_INT;
-        info_ex->value.int_value = (int)info.value.int8_value;
+        info->type = UNPACK_TYPE_INT;
+        info->value.int_value = (int)info_base.value.int8_value;
     }
-    else if( info.type == TYPE_VALIABLE_INT16 )
+    else if( info_base.type == TYPE_VALIABLE_INT16 )
     {
-        info_ex->type = UNPACK_TYPE_INT;
-        info_ex->value.int_value = (int)info.value.int16_value;
+        info->type = UNPACK_TYPE_INT;
+        info->value.int_value = (int)info_base.value.int16_value;
     }
-    else if( info.type == TYPE_VALIABLE_INT32 )
+    else if( info_base.type == TYPE_VALIABLE_INT32 )
     {
-        info_ex->type = UNPACK_TYPE_INT;
-        info_ex->value.int_value = (int)info.value.int32_value;
+        info->type = UNPACK_TYPE_INT;
+        info->value.int_value = (int)info_base.value.int32_value;
     }
-    else if( info.type == TYPE_FIXROW ||
-             info.type == TYPE_VALIABLE_RAW16 ||
-             info.type == TYPE_VALIABLE_RAW32 )
+    else if( info_base.type == TYPE_FIXROW ||
+             info_base.type == TYPE_VALIABLE_RAW16 ||
+             info_base.type == TYPE_VALIABLE_RAW32 )
     {
-        info_ex->type = UNPACK_TYPE_RAW;
-        info_ex->value.raw_value.size = info.value.size;
-        info_ex->value.raw_value.data = (buf + info.size);
-        size += info.value.size;
+        info->type = UNPACK_TYPE_RAW;
+        info->value.raw_value.size = info_base.value.size;
+        info->value.raw_value.data = (buf + info_base.size);
+        size += info_base.value.size;
     }
     return size;
     

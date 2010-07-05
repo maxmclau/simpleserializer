@@ -3,18 +3,22 @@ using namespace boost::unit_test_framework;
 
 // serilizer tests.
 void pack_test_numeric( void );
-void unpack_test_numeric( void );
 void pack_test_raw( void );
-void unpack_test_raw( void );
 void pack_test_raw32( void );
+
+void unpack_base_test_numeric( void );
+void unpack_base_test_raw( void );
+
+void unpack_test( void );
 void unpack_test_raw32( void );
-void unpack_ex_test( void );
 
 // simplebuffer tests.
 void simplebuffer_test( void );
 
 // simplebuffer_serialize tests.
 void pack_simplebuffer_test_numeric( void );
+void pack_simplebuffer_test_raw( void );
+void pack_simplebuffer_test_raw32( void );
 
 bool init_function()
 {
@@ -26,10 +30,10 @@ bool init_function()
     
 
     test_suite *unpack_tests = BOOST_TEST_SUITE( "unpack_tests" );
-    unpack_tests->add( BOOST_TEST_CASE(&unpack_test_numeric) );
-    unpack_tests->add( BOOST_TEST_CASE(&unpack_test_raw) );
+    unpack_tests->add( BOOST_TEST_CASE(&unpack_base_test_numeric) );
+    unpack_tests->add( BOOST_TEST_CASE(&unpack_base_test_raw) );
+    unpack_tests->add( BOOST_TEST_CASE(&unpack_test) );
     unpack_tests->add( BOOST_TEST_CASE(&unpack_test_raw32) );
-    unpack_tests->add( BOOST_TEST_CASE(&unpack_ex_test) );
     framework::master_test_suite().add( unpack_tests );
 
     test_suite *simplebuffer_tests = BOOST_TEST_SUITE( "simplebuffer_tests" );
@@ -38,6 +42,8 @@ bool init_function()
 
     test_suite *simplebuffer_serialize_tests = BOOST_TEST_SUITE( "simplebuffer_serialize_tests" );
     simplebuffer_serialize_tests->add( BOOST_TEST_CASE(&pack_simplebuffer_test_numeric) );
+    simplebuffer_serialize_tests->add( BOOST_TEST_CASE(&pack_simplebuffer_test_raw) );
+    simplebuffer_serialize_tests->add( BOOST_TEST_CASE(&pack_simplebuffer_test_raw32) );
     framework::master_test_suite().add( simplebuffer_serialize_tests );
 
     return true;
