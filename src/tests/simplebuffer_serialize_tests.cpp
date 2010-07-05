@@ -29,9 +29,9 @@ using boost::unit_test_framework::test_suite;
 
 extern "C"
 {
-#include "pack_simplebuffer.h"
+#include <pack_simplebuffer.h>
 
-#include "defines.h"
+#include "../serializer/defines.h"
 }
 
 static const unsigned char numeric_data[] = {

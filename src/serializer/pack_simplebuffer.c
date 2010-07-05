@@ -215,7 +215,6 @@ bool pack_simplebuffer_raw( simplebuffer* buffer, uint8_t* data, size_t data_siz
     return false;
 }
 
-
 #ifdef SUPPORT_64BIT_VALUE
 bool pack_simplebuffer_double( simplebuffer* buffer, double data )
 {
