@@ -33,8 +33,7 @@ CFLAGS   += -I$(PROJ_ROOT)/include
 # for BOOST
 CFLAGS   += -I/usr/local/include/boost_1_43_0
 CFLAGS   += -DBOOST_TEST_DYN_LINK
-LDFLAGS  += -L/usr/local/lib/boost_1_43_0
-LIBS     += -lboost_unit_test_framework
+LIBRARIES  += -L/usr/local/lib/boost_1_43_0 -lboost_unit_test_framework
 
 SRCDIRS += $(PROJ_ROOT)/src/serializer
 SRCDIRS += $(PROJ_ROOT)/src/tests
