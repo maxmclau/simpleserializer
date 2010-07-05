@@ -27,12 +27,12 @@
 GNUMAKEFILE_VERSION := ' $$Revision: 58 $$ '
 
 ######################################################################
-# 全体設定
-# デフォルトルールを消去
+# Common settings.
+# Delete default rule.
 .SUFFIXES:
 
 ######################################################################
-# 外部ツール
+# External tools.
 
 MKDIR=/bin/mkdir
 CAT=  /bin/cat
@@ -40,56 +40,52 @@ RM=   /bin/rm
 
 
 ######################################################################
-# ビルド
+# Default build target.
 .DEFAULT_GOAL := all
 .PHONY: all
 all: outdirs premake target postmake
 
 ######################################################################
-# ファイル名関連
+# File name settings.
 
-
-# C++の拡張子に関しては諸説あるので変数としておく。
-# ただし、複数の拡張子が混在する可能性については考えない
+# C++ file extension.
 CXXEXT=.cpp
 
-# アセンブリ言語の拡張子に関しても同様
+# Assembler file extension.
 ASMEXT=.S
 
-# ソースコードとして取り扱う拡張子
+# File extension use as source code.
 SRCEXTS=$(ASMEXT) .c .m $(CXXEXT)
 
-# オブジェクトファイルの拡張子
+# Object file extension.
 OBJEXT=.o
 
-# ディレクトリ自動探索から除外するディレクトリ名
-DIR_EXCEPTION=CVS .svn $(notdir $(OUTDIR)) $(notdir $(OBJDIR))
-
-# ビルドする前に実行されるターゲット
+# Pre make target.
 .PHONY: premake
 premake:
 
-# ビルドした後に実行されるターゲット
+# Post make target.
 .PHONY: postmake
 postmake:
 
 ######################################################################
-# 出力ファイル等
-# デフォルト出力名
+# Output files.
+
+# Default name.
 NAME=$(notdir $(abspath .))
 ifeq ($(strip $(NAME)),)
 	NAME=root
 endif
 
-# 出力ディレクトリが指定されていなかった場合にはディレクトリ名_Dataに出力する
+# If OUTDIR is not set use $(NAME)_Data
 ifeq ($(strip $(OUTDIR)),)
 	OUTDIR=$(NAME)_Data
 endif
 
 
-# オブジェクト出力ディレクトリが指定されていなかった場合はデフォルト値を使用する
+# If OBJDIR is not set use default value.
 ifeq ($(strip $(OBJDIR)),)
-# '..' の数だけ'obj'を重ねる処理
+# Repeat 'obj', same as number of '..'.
 	comma:=,
 	empty:=
 	space:=$(empty) $(empty)
@@ -101,21 +97,21 @@ ifeq ($(strip $(OBJDIR)),)
 endif
 
 ######################################################################
-# ソースファイル
+# Source files.
 
-# SOURCE_EXCEPTIONに含まれるファイルを除外しながら、SRCDIRSに含まれるソースコードを探索する。
+# Search source files in SRCDIRS, except filename that SOURCE_EXCEPTION has.
 SOURCES := $(filter-out $(SOURCE_EXCEPTION), \
 	$(foreach d,$(SRCDIRS),$(wildcard $(addprefix $(d)/*,$(SRCEXTS)))))
 
-# 検索対象にならないファイルを追加する。
+# Add extra source directly.
 ifneq ($(strip $(SOURCE_EXTRA)),)
 	SOURCES+=$(SOURCE_EXTRA)
 endif
 
 
 ######################################################################
-# 生成物
-# オブジェクトファイルリスト
+# Generate objects.
+
 OBJECTS=$(addprefix $(OUTDIR)/$(OBJDIR)/, \
 		$(addsuffix $(OBJEXT), \
 		$(basename $(sort $(SOURCES)))))
@@ -123,9 +119,9 @@ OBJECTS=$(addprefix $(OUTDIR)/$(OBJDIR)/, \
 # 依存関係ファイルリスト
 DEPENDS=$(OBJECTS:$(OBJEXT)=.d)
 
-# ARCHIVEが指定されていたらライブラリ生成ターゲットとして指定
-# ARCHIVEが指定されていない場合、PROGRAMを実行ファイル生成ターゲットとする。
-# PROGRAMも指定されていない場合には、カレントディレクトリ名を実行ファイル名とする
+# if ARCHIVE was set use it as library name.
+# if ARCHIVE was not set use PROGRAM as executable name.
+# if neither PROGRAM nor ARCHIVE was not set use current directory name as executable name.
 ifeq ($(strip $(ARCHIVE)),)
 ifeq ($(strip $(PROGRAM)),)
 PROGRAM=$(OUTDIR)/$(NAME)
@@ -146,21 +142,20 @@ else
 endif
 
 
-# 出力用ディレクトリ作成
+# Create output directory.
 OUTDIRS=$(sort $(dir $(OBJECTS))) $(dir $(TARGET))
 .PHONY: outdirs
 outdirs: $(OUTDIRS)
 $(OUTDIRS):
 	@$(MKDIR) -p $@
 
-# 依存関係ファイルが存在したらincludeする
+# Include dependencies if they exist.
 -include $(DEPENDS)
 
 ######################################################################
-# コンパイル
-# 個別ルール
+# Compile rules.
 
-# アセンブラ
+# Assembler
 $(OUTDIR)/$(OBJDIR)/%$(OBJEXT):%$(ASMEXT)
 	$(COMPILE_s)
 	$(CHECK_s)
@@ -179,7 +174,7 @@ $(OUTDIR)/$(OBJDIR)/%$(OBJEXT):%$(CXXEXT)
 	$(CHECK_cxx)
 
 ######################################################################
-# クリーン
+# Clean
 .PHONY: clean
 clean:
 	@$(RM) -f $(OBJECTS)
@@ -196,7 +191,7 @@ lib-clean:
 
 
 ######################################################################
-# このメイクファイルのデバッグ用
+# Debug target
 .PHONY: debug
 debug:
 	@echo 'SRCDIRS             :' $(SRCDIRS)
@@ -210,21 +205,19 @@ debug:
 	@echo "GNUMAKEFILE_VERSION :" $(GNUMAKEFILE_VERSION)
 
 ######################################################################
-# ヘルプ
+# Help target
 .PHONY: help
 help:
-	@echo "汎用GNUmakefile " $(GNUMAKEFILE_VERSION)
+	@echo "Generic GNUmakefile " $(GNUMAKEFILE_VERSION)
 	@echo "TARGETS:"
-	@echo "	all		バイナリを生成します"
-	@echo "	debug		各種変数を表示します"
-	@echo "	clean		オブジェクト、バイナリを削除します"
-	@echo "	all-clean	出力ディレクトリを完全に削除します"
-	@echo "	help		このメッセージを表示"
+	@echo "	all		Generate binary.(executable or library)"
+	@echo "	debug		Display make variables."
+	@echo "	clean		Delete object files and binaries."
+	@echo "	all-clean	Delete output directory completely."
+	@echo "	help		Display this message."
 
 ######################################################################
-# エラー
-
-# ソースコードが見つからない
+# No source was found on SRCDIRS.
 ifeq ($(strip $(SOURCES)),)
 ifneq ($(if $(or $(findstring debug,$(MAKECMDGOALS)), \
                  $(findstring help,$(MAKECMDGOALS))),1),1)
