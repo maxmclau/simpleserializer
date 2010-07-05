@@ -3,8 +3,8 @@
 
 bool pack_simplebuffer_fixuint( simplebuffer* buffer, uint8_t data )
 {
-    uint8_t *buf = buffer->data + buffer->size;
-    if( simplebuffer_checksize( buffer, 1) )
+    uint8_t *buf = simplebuffer_checksize( buffer, 1);
+    if( buf != NULL )
     {
         pack_fixuint( buf, data );
         return true;
@@ -14,8 +14,8 @@ bool pack_simplebuffer_fixuint( simplebuffer* buffer, uint8_t data )
 
 bool pack_simplebuffer_uint8( simplebuffer* buffer, uint8_t data )
 {
-    uint8_t *buf = buffer->data + buffer->size;
-    if( simplebuffer_checksize( buffer, 2) )
+    uint8_t *buf = simplebuffer_checksize( buffer, 2);
+    if( buf != NULL )
     {
         pack_uint8( buf, data );
         return true;
@@ -25,8 +25,8 @@ bool pack_simplebuffer_uint8( simplebuffer* buffer, uint8_t data )
 
 bool pack_simplebuffer_uint16( simplebuffer* buffer, uint16_t data )
 {
-    uint8_t *buf = buffer->data + buffer->size;
-    if( simplebuffer_checksize( buffer, 3) )
+    uint8_t *buf = simplebuffer_checksize( buffer, 3);
+    if( buf != NULL )
     {
         pack_uint16( buf, data );
         return true;
@@ -36,8 +36,8 @@ bool pack_simplebuffer_uint16( simplebuffer* buffer, uint16_t data )
 
 bool pack_simplebuffer_uint32( simplebuffer* buffer, uint32_t data )
 {
-    uint8_t *buf = buffer->data + buffer->size;
-    if( simplebuffer_checksize( buffer, 5) )
+    uint8_t *buf = simplebuffer_checksize( buffer, 5);
+    if( buf != NULL )
     {
         pack_uint32( buf, data );
         return true;
@@ -47,8 +47,8 @@ bool pack_simplebuffer_uint32( simplebuffer* buffer, uint32_t data )
 
 bool pack_simplebuffer_fixint( simplebuffer* buffer, int8_t data )
 {
-    uint8_t *buf = buffer->data + buffer->size;
-    if( simplebuffer_checksize( buffer, 1) )
+    uint8_t *buf = simplebuffer_checksize( buffer, 1);
+    if( buf != NULL )
     {
         pack_fixint( buf, data );
         return true;
@@ -58,8 +58,8 @@ bool pack_simplebuffer_fixint( simplebuffer* buffer, int8_t data )
 
 bool pack_simplebuffer_int8( simplebuffer* buffer, int8_t data )
 {
-    uint8_t *buf = buffer->data + buffer->size;
-    if( simplebuffer_checksize( buffer, 2) )
+    uint8_t *buf = simplebuffer_checksize( buffer, 2);
+    if( buf != NULL )
     {
         pack_int8( buf, data );
         return true;
@@ -69,8 +69,8 @@ bool pack_simplebuffer_int8( simplebuffer* buffer, int8_t data )
 
 bool pack_simplebuffer_int16( simplebuffer* buffer, int16_t data )
 {
-    uint8_t *buf = buffer->data + buffer->size;
-    if( simplebuffer_checksize( buffer, 3) )
+    uint8_t *buf = simplebuffer_checksize( buffer, 3);
+    if( buf != NULL )
     {
         pack_int16( buf, data );
         return true;
@@ -80,8 +80,8 @@ bool pack_simplebuffer_int16( simplebuffer* buffer, int16_t data )
 
 bool pack_simplebuffer_int32( simplebuffer* buffer, int32_t data )
 {
-    uint8_t *buf = buffer->data + buffer->size;
-    if( simplebuffer_checksize( buffer, 5) )
+    uint8_t *buf = simplebuffer_checksize( buffer, 5);
+    if( buf != NULL )
     {
         pack_int32( buf, data );
         return true;
@@ -91,8 +91,8 @@ bool pack_simplebuffer_int32( simplebuffer* buffer, int32_t data )
 
 bool pack_simplebuffer_nil( simplebuffer* buffer )
 {
-    uint8_t *buf = buffer->data + buffer->size;
-    if( simplebuffer_checksize( buffer, 1) )
+    uint8_t *buf = simplebuffer_checksize( buffer, 1);
+    if( buf != NULL )
     {
         *buf = TYPE_VALIABLE_NIL;
         return true;
@@ -102,8 +102,8 @@ bool pack_simplebuffer_nil( simplebuffer* buffer )
 
 bool pack_simplebuffer_bool( simplebuffer* buffer, bool data )
 {
-    uint8_t *buf = buffer->data + buffer->size;
-    if( simplebuffer_checksize( buffer, 1) )
+    uint8_t *buf = simplebuffer_checksize( buffer, 1);
+    if( buf != NULL )
     {
         if( data )
         {
@@ -120,8 +120,8 @@ bool pack_simplebuffer_bool( simplebuffer* buffer, bool data )
 
 bool pack_simplebuffer_float( simplebuffer* buffer, float data )
 {
-    uint8_t *buf = buffer->data + buffer->size;
-    if( simplebuffer_checksize( buffer, 5) )
+    uint8_t *buf = simplebuffer_checksize( buffer, 5);
+    if( buf != NULL )
     {
         pack_float( buf, data );
         return true;
@@ -180,7 +180,9 @@ bool pack_simplebuffer_raw( simplebuffer* buffer, uint8_t* data, size_t data_siz
     if( data_size < 32 )           {size = 1;}
     else if( data_size < 0x10000 ) {size = 3;}
     else                           {size = 5;}
-    if( simplebuffer_checksize( buffer, size + data_size) )
+
+    buf = simplebuffer_checksize( buffer, size + data_size);
+    if( buf != NULL )
     {
         pack_raw( buf, data, data_size );
         return true;
@@ -193,8 +195,8 @@ bool pack_simplebuffer_raw( simplebuffer* buffer, uint8_t* data, size_t data_siz
 #ifdef SUPPORT_64BIT_VALUE
 bool pack_simplebuffer_double( simplebuffer* buffer, double data )
 {
-    uint8_t *buf = buffer->data + buffer->size;
-    if( simplebuffer_checksize( buffer, 9) )
+    uint8_t* buf = simplebuffer_checksize( buffer, 9);
+    if( buf != NULL )
     {
         pack_double( buf, data );
         return true;

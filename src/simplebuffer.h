@@ -27,7 +27,7 @@ typedef struct simplebuffer {
 void simplebuffer_init( simplebuffer *buf, uint8_t *data, size_t size );
 
 /// \brief Check and re-allocate buffer.
-bool simplebuffer_checksize( simplebuffer *buf, size_t size );
+uint8_t* simplebuffer_checksize( simplebuffer *buf, size_t size );
 
 /// \brief Add data into buffer.
 bool simplebuffer_write( simplebuffer *buf, uint8_t* data, size_t size );

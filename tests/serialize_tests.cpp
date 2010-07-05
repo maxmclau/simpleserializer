@@ -128,120 +128,120 @@ void pack_test_numeric( void )
     BOOST_CHECK_EQUAL(memcmp( buf1, buf2, size1 ), 0 );
 }
 
-void unpack_test_numeric( void )
+void unpack_base_test_numeric( void )
 {
     size_t pos = 0;
-    unpack_info_t info;
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    unpack_base_info_t info;
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_NIL );
     pos += info.size;
 
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_FALSE );
     pos += info.size;
 
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_TRUE );
     pos += info.size;
 
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_FLOAT );
     BOOST_CHECK_EQUAL( info.value.float_value, FLT_MAX/2 );
     pos += info.size;
 
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_FLOAT );
     BOOST_CHECK_EQUAL( info.value.float_value, FLT_MIN/2 );
     pos += info.size;
 
 #ifdef SUPPORT_64BIT_VALUE
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_DOUBLE );
     BOOST_CHECK_EQUAL( info.value.double_value, FLT_MAX*2 );
     pos += info.size;
 
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_DOUBLE );
     BOOST_CHECK_EQUAL( info.value.double_value, FLT_MIN*2 );
     pos += info.size;
 #endif
     
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_POSITIVE_FIXNUM );
     BOOST_CHECK_EQUAL( info.value.uint8_value, 0 );
     pos += info.size;
     
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_POSITIVE_FIXNUM );
     BOOST_CHECK_EQUAL( info.value.uint8_value, 127 );
     pos += info.size;
 
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_UINT8 );
     BOOST_CHECK_EQUAL( info.value.uint8_value, 128 );
     pos += info.size;
 
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_UINT8 );
     BOOST_CHECK_EQUAL( info.value.uint8_value, 255 );
     pos += info.size;
 
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_UINT16 );
     BOOST_CHECK_EQUAL( info.value.uint16_value, 256 );
     pos += info.size;
 
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_UINT16 );
     BOOST_CHECK_EQUAL( info.value.uint16_value, 65535 );
     pos += info.size;
 
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_UINT32 );
     BOOST_CHECK_EQUAL( info.value.uint32_value, 65536u );
     pos += info.size;
 
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_UINT32 );
     BOOST_CHECK_EQUAL( info.value.uint32_value, 268435455u );
     pos += info.size;
 
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_NEGATIVE_FIXNUM );
     BOOST_CHECK_EQUAL( info.value.int8_value, -1 );
     pos += info.size;
 
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_NEGATIVE_FIXNUM );
     BOOST_CHECK_EQUAL( info.value.int8_value, -32 );
     pos += info.size;
 
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_INT8 );
     BOOST_CHECK_EQUAL( info.value.int8_value, -33 );
     pos += info.size;
 
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_INT8 );
     BOOST_CHECK_EQUAL( info.value.int8_value, -128 );
     pos += info.size;
 
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_INT16 );
     BOOST_CHECK_EQUAL( info.value.int16_value, -129 );
     pos += info.size;
 
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_INT16 );
     BOOST_CHECK_EQUAL( info.value.int16_value, -32768 );
     pos += info.size;
 
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_INT32 );
     BOOST_CHECK_EQUAL( info.value.int32_value, -32769 );
     pos += info.size;
     
-    info = unpack( (unsigned char *)&(numeric_data[pos]) );
+    info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_INT32 );
     BOOST_CHECK_EQUAL( info.value.int32_value, -134217728 );
     pos += info.size;
@@ -262,33 +262,33 @@ void pack_test_raw( void )
     BOOST_CHECK_EQUAL( memcmp( buf, raw_data, size ), 0 );
 }
 
-void unpack_test_raw( void )
+void unpack_base_test_raw( void )
 {
     size_t pos = 0;
-    unpack_info_t info;
+    unpack_base_info_t info;
 
-    info = unpack( (unsigned char *)&(raw_data[pos]) );
+    info = unpack_base( (unsigned char *)&(raw_data[pos]) );
     pos += info.size;
     BOOST_CHECK_EQUAL( info.type, TYPE_FIXROW );
     BOOST_CHECK_EQUAL( info.value.size, 5u );
     BOOST_CHECK_EQUAL( strcmp( "TEST", (char *)&(raw_data[pos]) ), 0 );
     pos += info.value.size;
 
-    info = unpack( (unsigned char *)&(raw_data[pos]) );
+    info = unpack_base( (unsigned char *)&(raw_data[pos]) );
     pos += info.size;
     BOOST_CHECK_EQUAL( info.type, TYPE_FIXROW );
     BOOST_CHECK_EQUAL( info.value.size, 31u );
     BOOST_CHECK_EQUAL( strcmp( "012345678901234567890123456789", (char *)&(raw_data[pos]) ), 0 );
     pos += info.value.size;
 
-    info = unpack( (unsigned char *)&(raw_data[pos]) );
+    info = unpack_base( (unsigned char *)&(raw_data[pos]) );
     pos += info.size;
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_RAW16 );
     BOOST_CHECK_EQUAL( info.value.size, 32u );
     BOOST_CHECK_EQUAL( strcmp( "ABCDEFGHIJKLMNOPQRSTUVWXYZabcde", (char *)&(raw_data[pos]) ), 0 );
     pos += info.value.size;
 
-    info = unpack( (unsigned char *)&(raw_data[pos]) );
+    info = unpack_base( (unsigned char *)&(raw_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_NIL );
     pos += info.size;
 
@@ -319,9 +319,112 @@ void pack_test_raw32( void )
     free(buf);
 }
 
+void unpack_test( void )
+{
+    unpack_info_t info;
+    int size = 0;
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_NIL );
+
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_BOOL );
+    BOOST_CHECK_EQUAL( info.value.bool_value, false );
+    
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_BOOL );
+    BOOST_CHECK_EQUAL( info.value.bool_value, true );
+    
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+#ifdef SUPPORT_64BIT_VALUE
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+#endif
+    
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_UINT );
+    BOOST_CHECK_EQUAL( info.value.uint_value, 0u );
+
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_UINT );
+    BOOST_CHECK_EQUAL( info.value.uint_value, 127u );
+
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_UINT );
+    BOOST_CHECK_EQUAL( info.value.uint_value, 128u );
+    
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_UINT );
+    BOOST_CHECK_EQUAL( info.value.uint_value, 255u );
+    
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_UINT );
+    BOOST_CHECK_EQUAL( info.value.uint_value, 256u );
+    
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_UINT );
+    BOOST_CHECK_EQUAL( info.value.uint_value, 65535u );
+    
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_UINT );
+    BOOST_CHECK_EQUAL( info.value.uint_value, 65536u );
+    
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_UINT );
+    BOOST_CHECK_EQUAL( info.value.uint_value, 268435455u );
+
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_INT );
+    BOOST_CHECK_EQUAL( info.value.int_value, -1 );
+
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_INT );
+    BOOST_CHECK_EQUAL( info.value.int_value, -32 );
+
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_INT );
+    BOOST_CHECK_EQUAL( info.value.int_value, -33 );
+
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_INT );
+    BOOST_CHECK_EQUAL( info.value.int_value, -128 );
+
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_INT );
+    BOOST_CHECK_EQUAL( info.value.int_value, -129 );
+
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_INT );
+    BOOST_CHECK_EQUAL( info.value.int_value, -32768 );
+
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_INT );
+    BOOST_CHECK_EQUAL( info.value.int_value, -32769 );
+
+    size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_INT );
+    BOOST_CHECK_EQUAL( info.value.int_value, -134217728 );
+
+    size = 0;
+    size += unpack( &info, (unsigned char *)&(raw_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_RAW );
+    BOOST_CHECK_EQUAL( info.value.raw_value.size, 5u );
+    BOOST_CHECK_EQUAL( strcmp("TEST", (char *)info.value.raw_value.data), 0 );
+
+    size += unpack( &info, (unsigned char *)&(raw_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_RAW );
+    BOOST_CHECK_EQUAL( info.value.raw_value.size, 31u );
+    BOOST_CHECK_EQUAL( strcmp("012345678901234567890123456789", (char *)info.value.raw_value.data), 0 );
+
+    size += unpack( &info, (unsigned char *)&(raw_data[size]) );
+    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_RAW );
+    BOOST_CHECK_EQUAL( info.value.raw_value.size, 32u );
+    BOOST_CHECK_EQUAL( strcmp("ABCDEFGHIJKLMNOPQRSTUVWXYZabcde", (char *)info.value.raw_value.data), 0 );
+}
+
 void unpack_test_raw32( void )
 {
-    unpack_ex_info_t info;
+    unpack_info_t info;
     int i = 0, size = 0, data_size = 131072;
     unsigned char *test_data = (unsigned char *)malloc( data_size + 10 );
 
@@ -336,120 +439,14 @@ void unpack_test_raw32( void )
     }
     *(test_data+i+5) = 0xc0;
     
-    size += unpack_ex( &info, (unsigned char *)&(test_data[size]) );
+    size += unpack( &info, (unsigned char *)&(test_data[size]) );
     BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_RAW );
     BOOST_CHECK_EQUAL( info.value.raw_value.size, (size_t)data_size );
     BOOST_CHECK_EQUAL( memcmp( test_data+5, info.value.raw_value.data, data_size), 0 );
 
-    size += unpack_ex( &info, (unsigned char *)&(test_data[size]) );
+    size += unpack( &info, (unsigned char *)&(test_data[size]) );
     BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_NIL );
     
     free(test_data);
 }
-
-void unpack_ex_test( void )
-{
-    unpack_ex_info_t info;
-    int size = 0;
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_NIL );
-
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_BOOL );
-    BOOST_CHECK_EQUAL( info.value.bool_value, false );
-    
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_BOOL );
-    BOOST_CHECK_EQUAL( info.value.bool_value, true );
-    
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-#ifdef SUPPORT_64BIT_VALUE
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-#endif
-    
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_UINT );
-    BOOST_CHECK_EQUAL( info.value.uint_value, 0u );
-
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_UINT );
-    BOOST_CHECK_EQUAL( info.value.uint_value, 127u );
-
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_UINT );
-    BOOST_CHECK_EQUAL( info.value.uint_value, 128u );
-    
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_UINT );
-    BOOST_CHECK_EQUAL( info.value.uint_value, 255u );
-    
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_UINT );
-    BOOST_CHECK_EQUAL( info.value.uint_value, 256u );
-    
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_UINT );
-    BOOST_CHECK_EQUAL( info.value.uint_value, 65535u );
-    
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_UINT );
-    BOOST_CHECK_EQUAL( info.value.uint_value, 65536u );
-    
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_UINT );
-    BOOST_CHECK_EQUAL( info.value.uint_value, 268435455u );
-
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_INT );
-    BOOST_CHECK_EQUAL( info.value.int_value, -1 );
-
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_INT );
-    BOOST_CHECK_EQUAL( info.value.int_value, -32 );
-
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_INT );
-    BOOST_CHECK_EQUAL( info.value.int_value, -33 );
-
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_INT );
-    BOOST_CHECK_EQUAL( info.value.int_value, -128 );
-
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_INT );
-    BOOST_CHECK_EQUAL( info.value.int_value, -129 );
-
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_INT );
-    BOOST_CHECK_EQUAL( info.value.int_value, -32768 );
-
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_INT );
-    BOOST_CHECK_EQUAL( info.value.int_value, -32769 );
-
-    size += unpack_ex( &info, (unsigned char *)&(numeric_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_INT );
-    BOOST_CHECK_EQUAL( info.value.int_value, -134217728 );
-
-    size = 0;
-    size += unpack_ex( &info, (unsigned char *)&(raw_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_RAW );
-    BOOST_CHECK_EQUAL( info.value.raw_value.size, 5u );
-    BOOST_CHECK_EQUAL( strcmp("TEST", (char *)info.value.raw_value.data), 0 );
-
-    size += unpack_ex( &info, (unsigned char *)&(raw_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_RAW );
-    BOOST_CHECK_EQUAL( info.value.raw_value.size, 31u );
-    BOOST_CHECK_EQUAL( strcmp("012345678901234567890123456789", (char *)info.value.raw_value.data), 0 );
-
-    size += unpack_ex( &info, (unsigned char *)&(raw_data[size]) );
-    BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_RAW );
-    BOOST_CHECK_EQUAL( info.value.raw_value.size, 32u );
-    BOOST_CHECK_EQUAL( strcmp("ABCDEFGHIJKLMNOPQRSTUVWXYZabcde", (char *)info.value.raw_value.data), 0 );
-}
-
-
-
 

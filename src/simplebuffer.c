@@ -29,8 +29,9 @@ void simplebuffer_init( simplebuffer *buf, uint8_t *data, size_t size )
     }
 }
 
-bool simplebuffer_checksize( simplebuffer *buf, size_t size )
+uint8_t* simplebuffer_checksize( simplebuffer *buf, size_t size )
 {
+    uint8_t* checked_buffer = NULL;
     if( buf->alloc < buf->size + size )
     {
         // Calc next alloction size.
@@ -40,7 +41,7 @@ bool simplebuffer_checksize( simplebuffer *buf, size_t size )
         uint8_t *newdata = s_allocate_function( newsize );
         if( newdata == NULL )
         {
-            return false;
+            return NULL;
         }
         if( buf->size != 0 )
         {
@@ -56,8 +57,9 @@ bool simplebuffer_checksize( simplebuffer *buf, size_t size )
         buf->data  = newdata;
         buf->alloc = newsize;
     }
+    checked_buffer = buf->data + buf->size;
     buf->size += size;
-    return true;
+    return checked_buffer;
 }
 
 bool simplebuffer_write( simplebuffer *buf, uint8_t* data, size_t size )
