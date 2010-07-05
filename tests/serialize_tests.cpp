@@ -7,6 +7,8 @@ extern "C"
 {
 #include "pack.h"
 #include "unpack.h"
+
+#include "defines.h"
 }
 
 static const unsigned char numeric_data[] = {

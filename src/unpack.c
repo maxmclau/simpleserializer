@@ -3,16 +3,16 @@
 
 #include <stdint.h>
 
-/// 8ビット値を取得
+/// Get 8bit value from buffer.
 #define UNPACK_GET_8BIT_VALUE(d)  (*(d))
 
 
-/// 16ビット値を取得
+/// Get 16bit value from buffer.
 #define UNPACK_GET_16BIT_VALUE(d)         \
     ((uint16_t)(*d) << 8) |               \
     (uint16_t)(*(d+1))
 
-/// 32ビット値を取得
+/// Get 32bit value from buffer.
 #define UNPACK_GET_32BIT_VALUE(d)         \
     ((uint32_t)(*d) << 24)     |          \
     ((uint32_t)*(d+1) << 16) |            \
@@ -20,7 +20,7 @@
     (uint32_t)*(d+3)
 
 #ifdef SUPPORT_64BIT_VALUE
-/// 64ビット値を取得
+/// Get 64bit value from buffer.
 #define UNPACK_GET_64BIT_VALUE(d)         \
     ((uint64_t)(*d) << 56)   |            \
     ((uint64_t)*(d+1) << 48) |            \

@@ -5,8 +5,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "defines.h"
-
 typedef union unpack_value_t
 {
     int8_t int8_value;
@@ -27,9 +25,9 @@ typedef union unpack_value_t
     
 typedef struct unpack_info_t
 {
-    size_t size;              ///< シリアライズデータサイズ
-    uint8_t type;             ///< データ型
-    unpack_value_t value;     ///< 値
+    size_t size;              ///< Serialized data size.
+    uint8_t type;             ///< Data type.
+    unpack_value_t value;     ///< Data value.
 } unpack_info_t;
 
 unpack_info_t unpack( uint8_t* buf );

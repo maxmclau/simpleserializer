@@ -56,17 +56,6 @@ int pack_float( uint8_t* buffer, float data )
     return 5;
 }
 
-#ifdef SUPPORT_64BIT_VALUE
-int pack_double( uint8_t* buffer, double data )
-{
-	union { double d; uint64_t i; } mem;
-	mem.d = data;
-    *buffer++ = TYPE_VALIABLE_DOUBLE;
-    PACK_64BIT_VALUE( buffer, mem.i );
-    return 9;
-}
-#endif
-
 int pack_fixuint( uint8_t* buffer, uint8_t data )
 {
     PACK_8BIT_VALUE( buffer, data );
@@ -189,4 +178,15 @@ int pack_raw( uint8_t* buffer, uint8_t* data, size_t data_size )
     size += data_size;
     return size;
 }
+
+#ifdef SUPPORT_64BIT_VALUE
+int pack_double( uint8_t* buffer, double data )
+{
+	union { double d; uint64_t i; } mem;
+	mem.d = data;
+    *buffer++ = TYPE_VALIABLE_DOUBLE;
+    PACK_64BIT_VALUE( buffer, mem.i );
+    return 9;
+}
+#endif
 
