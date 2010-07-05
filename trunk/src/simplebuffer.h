@@ -9,7 +9,10 @@
 /// \brief Simple buffer has variable length.
 /// 
 /// This is very simple implementation of variable length buffer on C.
-
+/// simplebuffer could be handle both allocated buffer and self-allocate buffer.
+/// 
+/// - Allocated buffer is given buffer from simplebuffer user.
+/// - Self allocate buffer is auto allocated data.
 void simplebuffer_system_init( size_t _minimum_allocate_unit,
                                uint8_t* (*_allocate_function)( size_t size ),
                                void (*_free_function)( void * ) );
@@ -21,7 +24,7 @@ typedef struct simplebuffer {
 } simplebuffer;
 
 /// \brief Initialize 
-void simplebuffer_init( simplebuffer *buf );
+void simplebuffer_init( simplebuffer *buf, uint8_t *data, size_t size );
 
 /// \brief Check and re-allocate buffer.
 bool simplebuffer_checksize( simplebuffer *buf, size_t size );

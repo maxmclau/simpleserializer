@@ -2,7 +2,7 @@ CC=gcc
 CXX=g++
 
 CFLAGS   += -DSUPPORT_64BIT_VALUE
-CFLAGS   += -Wall -O 
+CFLAGS   += -Werror -Wall -O 
 CXXFLAGS += $(CFLAGS)
 
 
@@ -17,10 +17,12 @@ LIBS     += -lboost_unit_test_framework
 all: test.exe
 OBJS += src/pack.o src/unpack.o
 OBJS += src/simplebuffer.o
+OBJS += src/pack_simplebuffer.o
 
 OBJS += tests/test_main.o
 OBJS += tests/serialize_tests.o
 OBJS += tests/simplebuffer_tests.o
+OBJS += tests/simplebuffer_serialize_tests.o
 
 test.exe : $(OBJS)
 	g++ -o test.exe $(OBJS) $(LDFLAGS) $(LIBS)
