@@ -181,6 +181,15 @@ int pack_int(  uint8_t* buffer, int data )
 int pack_raw( uint8_t* buffer, uint8_t* data, size_t data_size )
 {
     int size = 0;
+    size = pack_raw_header( buffer, data_size );
+    memcpy( buffer+size, data, data_size );
+    size += data_size;
+    return size;
+}
+
+int pack_raw_header( uint8_t* buffer, size_t data_size )
+{
+    int size = 0;
     if( data_size < 32 )
     {
         *buffer++ = TYPE_FIXROW | (unsigned char)data_size;
@@ -198,9 +207,17 @@ int pack_raw( uint8_t* buffer, uint8_t* data, size_t data_size )
         PACK_32BIT_VALUE( buffer, data_size );
         size = 5;
     }
-    memcpy( buffer, data, data_size );
-    size += data_size;
     return size;
+}
+
+int pack_array_header( uint8_t* buffer, size_t size )
+{
+    return 0;
+}
+
+int pack_map_header( uint8_t* buffer, size_t size )
+{
+    return 0;
 }
 
 #ifdef SUPPORT_64BIT_VALUE

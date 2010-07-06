@@ -199,7 +199,7 @@ bool pack_simplebuffer_int( simplebuffer* buffer, int data )
 
 bool pack_simplebuffer_raw( simplebuffer* buffer, uint8_t* data, size_t data_size )
 {
-    uint8_t *buf = buffer->data + buffer->size;
+    uint8_t *buf = NULL;
     size_t size = 0;
     if( data_size < 32 )           {size = 1;}
     else if( data_size < 0x10000 ) {size = 3;}
@@ -208,10 +208,38 @@ bool pack_simplebuffer_raw( simplebuffer* buffer, uint8_t* data, size_t data_siz
     buf = simplebuffer_checksize( buffer, size + data_size);
     if( buf != NULL )
     {
-        pack_raw( buf, data, data_size );
+        pack_raw(buf, data, data_size);
         return true;
     }
     
+    return false;
+}
+
+bool pack_simplebuffer_raw_header( simplebuffer* buffer, size_t data_size )
+{
+    uint8_t* buf = NULL;
+    size_t size = 0;
+    if( data_size < 32 )           {size = 1;}
+    else if( data_size < 0x10000 ) {size = 3;}
+    else                           {size = 5;}
+
+    buf = simplebuffer_checksize(buffer, size);
+    if( buf != NULL )
+    {
+        pack_raw_header(buf, data_size);
+        return true;
+    }
+    
+    return false;
+}
+
+bool pack_simplebuffer_array_header( simplebuffer* buffer, size_t data_size )
+{
+    return false;
+}
+
+bool pack_simplebuffer_map_header( simplebuffer* buffer, size_t data_size )
+{
     return false;
 }
 

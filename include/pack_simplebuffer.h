@@ -44,6 +44,10 @@ bool pack_simplebuffer_uint( simplebuffer* buffer, unsigned int data );
 bool pack_simplebuffer_int( simplebuffer* buffer, int data );
 bool pack_simplebuffer_raw( simplebuffer* buffer, uint8_t* data, size_t size );
 
+bool pack_simplebuffer_raw_header( simplebuffer* buffer, size_t data_size );
+bool pack_simplebuffer_array_header( simplebuffer* buffer, size_t data_size );
+bool pack_simplebuffer_map_header( simplebuffer* buffer, size_t data_size );
+
 #ifdef SUPPORT_64BIT_VALUE
 bool pack_simplebuffer_double( simplebuffer* buffer, double data );
 #endif
