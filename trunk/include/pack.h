@@ -51,6 +51,10 @@ int pack_uint( uint8_t* buffer, unsigned int data );
 int pack_int( uint8_t* buffer, int data );
 int pack_raw( uint8_t* buffer, uint8_t* data, size_t size );
 
+int pack_raw_header( uint8_t* buffer, size_t size );
+int pack_array_header( uint8_t* buffer, size_t size );
+int pack_map_header( uint8_t* buffer, size_t size );
+
 #ifdef SUPPORT_64BIT_VALUE
 int pack_double( uint8_t* buffer, double data );
 #endif

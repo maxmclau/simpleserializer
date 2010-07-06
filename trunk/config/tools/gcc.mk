@@ -35,30 +35,30 @@ AR     :=$(GCC_PREFIX)ar
 RANLIB :=$(GCC_PREFIX)ranlib
 
 # Defalut options.
-ASFLAGS += -finput-charset=utf-8 -fexec-charset=utf-8
-CFLAGS  += -finput-charset=utf-8 -fexec-charset=utf-8
-CXXFLAGS += -Wall #-Wno-non-virtual-dtor
-LDFLAGS +=
+ASFLAGS  += -finput-charset=utf-8 -fexec-charset=utf-8
+CFLAGS   += -finput-charset=utf-8 -fexec-charset=utf-8
+CXXFLAGS += -Wall
+LDFLAGS  +=
 
 # Compile rules
 define COMPILE_s
 	@echo Compiling $<
-	@$(AS) -c $(ASFLAGS)  $< -o $@
+	@$(AS) -MMD -MF $(basename $@).d -c $(ASFLAGS)  $< -o $@
 endef
 
 define COMPILE_c
 	@echo Compiling $<
-	@$(CC)  -c $(CFLAGS) $< -o $@
+	@$(CC) -MMD -MF $(basename $@).d -c $(CFLAGS) $< -o $@
 endef
 
 define COMPILE_m
 	@echo Compiling $<
-	@$(CC)  -c $(CFLAGS) $< -o $@
+	@$(CC) -MMD -MF $(basename $@).d -c $(CFLAGS) $< -o $@
 endef
 
 define COMPILE_cxx
 	@echo Compiling $<
-	@$(CXX)  -c $(CFLAGS) $(CXXFLAGS) $< -o $@
+	@$(CXX) -MMD -MF $(basename $@).d -c $(CFLAGS) $(CXXFLAGS) $< -o $@
 endef
 
 ifneq ($(strip $(filter %.m, $(SOURCES))),)
