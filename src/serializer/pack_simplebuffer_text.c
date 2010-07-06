@@ -1,29 +1,36 @@
+/**
+ *  Copyright (c) 2010  Yukio Obuchi
+ * 
+ *   Permission is hereby granted, free of charge, to any person
+ *  obtaining a copy of this software and associated documentation files
+ *  (the "Software"), to deal in the Software without restriction,
+ *  including without limitation the rights to use, copy, modify, merge,
+ *  publish, distribute, sublicense, and/or sell copies of the Software,
+ *  and to permit persons to whom the Software is furnished to do so,
+ *  subject to the following conditions:
+ * 
+ *   The above copyright notice and this permission notice shall be
+ *  included in all copies or substantial portions of the Software.
+ * 
+ *   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ *  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ *  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+ *  BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ *  ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ *  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ *  SOFTWARE.
+ */
+
 #include <stdio.h>
 #include <string.h>
 
 #include <simplebuffer.h>
 #include <unpack.h>
 #include <pack_simplebuffer.h>
+#include <pack_simplebuffer_text.h>
 
-#define MAX_PRINT_VALUE_LENGTH (1024)
-#define MAX_NEST_LEVEL         (50)
-
-typedef enum
-{
-    T_NORMAL,
-    T_ARRAY,
-    T_STRUCT,
-    T_STRING,
-    T_RAW,
-    T_NONE
-} array_type_t;
-
-struct nest_info_t
-{
-    array_type_t type;
-    int num_of_element;
-    int offset;
-};
+#include "text_serializer.h"
 
 typedef enum 
 {
@@ -282,7 +289,7 @@ static bool string_is_hex( simplebuffer *string )
     return false;
 }
 
-static unpack_info_t unpack_text( simplebuffer *string )
+static unpack_info_t text_to_value( simplebuffer *string )
 {
     unpack_info_t info = { 0 };
     if( string->size > 0 )
@@ -359,10 +366,7 @@ static unpack_info_t unpack_text( simplebuffer *string )
     return info;
 }
 
-static void check_token( simplebuffer* serialized,
-                         simplebuffer* token,
-                         struct nest_info_t *nest,
-                         size_t nestlevel )
+static void check_token( simplebuffer* serialized,simplebuffer* token,struct nest_info_t *nest,size_t nestlevel )
 {
     if( token->size != 0 )
     {
@@ -377,13 +381,13 @@ static void check_token( simplebuffer* serialized,
             }
             else if( nest[nestlevel].type == T_RAW )
             {
-                unpack_info_t v = unpack_text( token );
+                unpack_info_t v = text_to_value( token );
                 char c = (char)(v.value.uint_value & 0xff);
                 simplebuffer_write(serialized, (uint8_t*)&c, 1);
             }
             else
             {
-                unpack_info_t v = unpack_text( token );
+                unpack_info_t v = text_to_value( token );
                 if( v.type == UNPACK_TYPE_INT )
                 {
                     pack_simplebuffer_int( serialized,  v.value.int_value );

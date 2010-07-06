@@ -72,6 +72,7 @@ typedef union unpack_value_t
     double double_value;
 #endif
     unpack_raw_t raw_value;
+    size_t size_value;
 } unpack_value_t;
 
 typedef enum unpack_type_t
@@ -84,7 +85,9 @@ typedef enum unpack_type_t
 #ifdef SUPPORT_64BIT_VALUE
     UNPACK_TYPE_DOUBLE,
 #endif
-    UNPACK_TYPE_RAW
+    UNPACK_TYPE_RAW,
+    UNPACK_TYPE_ARRAY,
+    UNPACK_TYPE_MAP
 } unpack_type_t;
 
 typedef struct unpack_info_t
