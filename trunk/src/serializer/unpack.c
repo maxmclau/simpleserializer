@@ -203,6 +203,18 @@ int unpack( unpack_info_t *info, uint8_t* buf )
         info->type = UNPACK_TYPE_BOOL;
         info->value.bool_value = true;
     }
+    else if( info_base.type == TYPE_VALIABLE_FLOAT )
+    {
+        info->type = UNPACK_TYPE_FLOAT;
+        info->value.float_value = info_base.value.float_value;
+    }
+#ifdef SUPPORT_64BIT_VALUE
+    else if( info_base.type == TYPE_VALIABLE_DOUBLE )
+    {
+        info->type = UNPACK_TYPE_DOUBLE;
+        info->value.double_value = info_base.value.double_value;
+    }
+#endif
     else if( info_base.type == TYPE_POSITIVE_FIXNUM || info_base.type == TYPE_VALIABLE_UINT8 )
     {
         info->type = UNPACK_TYPE_UINT;

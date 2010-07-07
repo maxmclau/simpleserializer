@@ -44,6 +44,10 @@ void pack_simplebuffer_test_numeric( void );
 void pack_simplebuffer_test_raw( void );
 void pack_simplebuffer_test_raw32( void );
 
+// simplebuffer_serialize_text tests.
+void pack_simplebuffer_text_test( void );
+void unpack_simplebuffer_text_test( void );
+
 bool init_function()
 {
     test_suite *pack_tests = BOOST_TEST_SUITE( "pack_tests" );
@@ -70,6 +74,12 @@ bool init_function()
     simplebuffer_serialize_tests->add( BOOST_TEST_CASE(&pack_simplebuffer_test_raw32) );
     framework::master_test_suite().add( simplebuffer_serialize_tests );
 
+    test_suite *serialize_text_tests = BOOST_TEST_SUITE( "serialize_text_tests" );
+    serialize_text_tests->add( BOOST_TEST_CASE( &pack_simplebuffer_text_test) );
+    serialize_text_tests->add( BOOST_TEST_CASE( &unpack_simplebuffer_text_test) );
+    framework::master_test_suite().add( serialize_text_tests );
+
+    
     return true;
 }
 

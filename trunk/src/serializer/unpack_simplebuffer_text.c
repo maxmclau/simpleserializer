@@ -31,9 +31,9 @@
 
 #include "text_serializer.h"
 
-simplebuffer msgpack_unpack_to_text( simplebuffer serialized )
+simplebuffer unpack_simplebuffer_text( simplebuffer serialized )
 {
-    simplebuffer dump;
+    simplebuffer text;
     uint8_t tmpbuf[ MAX_PRINT_VALUE_LENGTH ];
     struct nest_info_t nest[ MAX_NEST_LEVEL ];
     size_t tmpsize;
@@ -42,7 +42,7 @@ simplebuffer msgpack_unpack_to_text( simplebuffer serialized )
     int offset = 0;
     array_type_t next_type = T_NONE;
 
-    simplebuffer_init( &dump, NULL, 0 );
+    simplebuffer_init( &text, NULL, 0 );
     nest[nestlevel].type = T_NONE;
     nest[nestlevel].num_of_element = -1;
     nest[nestlevel].offset = 0;
@@ -51,7 +51,7 @@ simplebuffer msgpack_unpack_to_text( simplebuffer serialized )
         bool is_nil = false;
         bool is_array_start = false;
         unpack_info_t info;
-        int size = unpack( &info, (uint8_t*)(serialized.data + offset) );
+        offset += unpack( &info, (uint8_t*)(serialized.data + offset) );
         switch( info.type )
         {
             case UNPACK_TYPE_NIL:
@@ -61,36 +61,37 @@ simplebuffer msgpack_unpack_to_text( simplebuffer serialized )
             case UNPACK_TYPE_BOOL:
                 if( info.value.bool_value )
                 {
-                    tmpsize = sprintf( (char *)tmpbuf, "true" );
+                    simplebuffer_write( &text, (uint8_t*)"true", 4 );
                 }
                 else
                 {
-                    tmpsize = sprintf( (char *)tmpbuf, "false" );
+                    simplebuffer_write( &text, (uint8_t*)"false", 5 );
                 }
-                simplebuffer_write( &dump, tmpbuf, tmpsize );
                 break;
                 
             case UNPACK_TYPE_INT:
                 tmpsize = sprintf( (char *)tmpbuf, "%dd",
                                    (int)(info.value.int_value) );
-                simplebuffer_write( &dump, tmpbuf, tmpsize );
+                simplebuffer_write( &text, tmpbuf, tmpsize );
                 break;
                 
             case UNPACK_TYPE_UINT:
                 tmpsize = sprintf( (char *)tmpbuf, "%uu",
                                    (unsigned int)(info.value.uint_value) );
-                simplebuffer_write( &dump, tmpbuf, tmpsize );
+                simplebuffer_write( &text, tmpbuf, tmpsize );
                 break;
                 
             case UNPACK_TYPE_FLOAT:
                 tmpsize = sprintf( (char *)tmpbuf, "%ff", info.value.float_value );
-                simplebuffer_write( &dump, tmpbuf, tmpsize );
+                simplebuffer_write( &text, tmpbuf, tmpsize );
                 break;
                 
+#ifdef SUPPORT_64BIT_VALUE
             case UNPACK_TYPE_DOUBLE:
                 tmpsize = sprintf( (char *)tmpbuf, "%lflf", info.value.double_value );
-                simplebuffer_write( &dump, tmpbuf, tmpsize );
+                simplebuffer_write( &text, tmpbuf, tmpsize );
                 break;
+#endif
                 
             case UNPACK_TYPE_RAW:
             {
@@ -113,30 +114,29 @@ simplebuffer msgpack_unpack_to_text( simplebuffer serialized )
                 if( is_printable )
                 {
                     tmpsize = sprintf( (char *)tmpbuf, "\"%s\"", info.value.raw_value.data );
-                    simplebuffer_write( &dump, tmpbuf, tmpsize );
+                    simplebuffer_write( &text, tmpbuf, tmpsize );
                 }
                 else
                 {
                     size_t i = 0;
                     tmpsize = sprintf( (char *)tmpbuf, "<" );
-                    simplebuffer_write( &dump, tmpbuf, tmpsize );
+                    simplebuffer_write( &text, tmpbuf, tmpsize );
                     for( i = 0; i < info.value.raw_value.size; i ++)
                     {
                         tmpsize = sprintf( (char *)tmpbuf, "0x%02X",
                                            *(info.value.raw_value.data + i) & 0xff);
-                        simplebuffer_write( &dump, tmpbuf, tmpsize );
+                        simplebuffer_write( &text, tmpbuf, tmpsize );
                         if ( i < info.value.raw_value.size-1 )
                         {
                             tmpsize = sprintf( (char *)tmpbuf, ", " );
-                            simplebuffer_write( &dump, tmpbuf, tmpsize );
+                            simplebuffer_write( &text, tmpbuf, tmpsize );
                         }
                         
 
                     }
                     tmpsize = sprintf( (char *)tmpbuf, ">" );
-                    simplebuffer_write( &dump, tmpbuf, tmpsize );
+                    simplebuffer_write( &text, tmpbuf, tmpsize );
                 }
-                offset += info.value.raw_value.size;
             } break;
                 
             case UNPACK_TYPE_ARRAY:
@@ -151,7 +151,7 @@ simplebuffer msgpack_unpack_to_text( simplebuffer serialized )
                     case T_STRUCT:tmpsize = sprintf( (char *)tmpbuf, "{" ); break;
                     default: tmpsize = sprintf( (char *)tmpbuf, "@" ); break;
                 }
-                simplebuffer_write( &dump, tmpbuf, tmpsize );
+                simplebuffer_write( &text, tmpbuf, tmpsize );
                 nestlevel += 1;
                 nest[nestlevel].type = next_type;
                 nest[nestlevel].num_of_element = (int)(info.value.size_value);
@@ -172,16 +172,15 @@ simplebuffer msgpack_unpack_to_text( simplebuffer serialized )
                     case T_ARRAY: tmpsize = sprintf( (char *)tmpbuf, "]" ); break;
                     default: tmpsize = sprintf( (char *)tmpbuf, "@" ); break;
                 }
-                simplebuffer_write( &dump, tmpbuf, tmpsize );
+                simplebuffer_write( &text, tmpbuf, tmpsize );
                 nestlevel -= 1;
             } 
         }
 
-        offset += size;
         if( offset < serialized.size && !is_array_start && !is_nil )
         {
             tmpsize = sprintf( (char *)tmpbuf, ", " );
-            simplebuffer_write( &dump, tmpbuf, tmpsize );
+            simplebuffer_write( &text, tmpbuf, tmpsize );
         }
 
         if( !is_nil )
@@ -191,6 +190,6 @@ simplebuffer msgpack_unpack_to_text( simplebuffer serialized )
         }
 
     }
-    simplebuffer_write( &dump, (uint8_t*)"", 1 );
-    return dump;
+    simplebuffer_write( &text, (uint8_t*)"", 1 );
+    return text;
 }
