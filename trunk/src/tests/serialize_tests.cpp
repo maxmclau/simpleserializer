@@ -37,6 +37,7 @@ extern "C"
 
 #include "test_data.h"
 
+
 void pack_test_numeric( void )
 {
     int size1 = 0;
@@ -47,11 +48,11 @@ void pack_test_numeric( void )
     size1 += pack_nil( &(buf1[size1]) );
     size1 += pack_bool( &(buf1[size1]), false );
     size1 += pack_bool( &(buf1[size1]), true );
-    size1 += pack_float( &(buf1[size1]), FLT_MAX/2 );
-    size1 += pack_float( &(buf1[size1]), FLT_MIN/2 );
+    size1 += pack_float( &(buf1[size1]), 1234.5 );
+    size1 += pack_float( &(buf1[size1]), -1234.5 );
 #ifdef SUPPORT_64BIT_VALUE
-    size1 += pack_double( &(buf1[size1]), FLT_MAX*2 );
-    size1 += pack_double( &(buf1[size1]), FLT_MIN*2 );
+    size1 += pack_double( &(buf1[size1]), 1234.123456 );
+    size1 += pack_double( &(buf1[size1]), -1234.123456 );
 #endif
     size1 += pack_fixuint( &(buf1[size1]), 0 );
     size1 += pack_fixuint( &(buf1[size1]), 127 );
@@ -73,11 +74,11 @@ void pack_test_numeric( void )
     size2 += pack_nil( &(buf2[size2]) );
     size2 += pack_bool( &(buf2[size2]), false );
     size2 += pack_bool( &(buf2[size2]), true );
-    size2 += pack_float( &(buf2[size2]), FLT_MAX/2 );
-    size2 += pack_float( &(buf2[size2]), FLT_MIN/2 );
+    size2 += pack_float( &(buf2[size2]), 1234.5 );
+    size2 += pack_float( &(buf2[size2]), -1234.5 );
 #ifdef SUPPORT_64BIT_VALUE
-    size2 += pack_double( &(buf2[size2]), FLT_MAX*2 );
-    size2 += pack_double( &(buf2[size2]), FLT_MIN*2 );
+    size2 += pack_double( &(buf2[size2]), 1234.123456 );
+    size2 += pack_double( &(buf2[size2]), -1234.123456 );
 #endif
     size2 += pack_int( &(buf2[size2]), 0 );
     size2 += pack_int( &(buf2[size2]), 127 );
@@ -121,23 +122,23 @@ void unpack_base_test_numeric( void )
 
     info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_FLOAT );
-    BOOST_CHECK_EQUAL( info.value.float_value, FLT_MAX/2 );
+    BOOST_CHECK_EQUAL( info.value.float_value, 1234.5 );
     pos += info.size;
 
     info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_FLOAT );
-    BOOST_CHECK_EQUAL( info.value.float_value, FLT_MIN/2 );
+    BOOST_CHECK_EQUAL( info.value.float_value, -1234.5 );
     pos += info.size;
 
 #ifdef SUPPORT_64BIT_VALUE
     info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_DOUBLE );
-    BOOST_CHECK_EQUAL( info.value.double_value, FLT_MAX*2 );
+    BOOST_CHECK_EQUAL( info.value.double_value, 1234.123456 );
     pos += info.size;
 
     info = unpack_base( (unsigned char *)&(numeric_data[pos]) );
     BOOST_CHECK_EQUAL( info.type, TYPE_VALIABLE_DOUBLE );
-    BOOST_CHECK_EQUAL( info.value.double_value, FLT_MIN*2 );
+    BOOST_CHECK_EQUAL( info.value.double_value, -1234.123456 );
     pos += info.size;
 #endif
     
@@ -311,17 +312,17 @@ void unpack_test( void )
     
     size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
     BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_FLOAT );
-    BOOST_CHECK_EQUAL( info.value.float_value, FLT_MAX/2 );
+    BOOST_CHECK_EQUAL( info.value.float_value, 1234.5 );
     size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
     BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_FLOAT );
-    BOOST_CHECK_EQUAL( info.value.float_value, FLT_MIN/2 );
+    BOOST_CHECK_EQUAL( info.value.float_value, -1234.5 );
 #ifdef SUPPORT_64BIT_VALUE
     size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
     BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_DOUBLE );
-    BOOST_CHECK_EQUAL( info.value.double_value, FLT_MAX*2 );
+    BOOST_CHECK_EQUAL( info.value.double_value, 1234.123456 );
     size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
     BOOST_CHECK_EQUAL( info.type, UNPACK_TYPE_DOUBLE );
-    BOOST_CHECK_EQUAL( info.value.double_value, FLT_MIN*2 );
+    BOOST_CHECK_EQUAL( info.value.double_value, -1234.123456 );
 #endif
     
     size += unpack( &info, (unsigned char *)&(numeric_data[size]) );
