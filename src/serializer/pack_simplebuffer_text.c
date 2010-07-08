@@ -560,7 +560,7 @@ static void pack_simplebuffer_text_sub( simplebuffer* serialized,
     check_token(serialized, &token, nest, nestlevel);
 }
 
-simplebuffer pack_simplebffer_text( char *text )
+simplebuffer pack_simplebuffer_text( char *text )
 {
     simplebuffer serialized;
     simplebuffer_init( &serialized, NULL, 0 );

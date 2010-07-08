@@ -52,14 +52,14 @@ void pack_simplebuffer_test_numeric( void )
     BOOST_CHECK_EQUAL(result, true);
     result = pack_simplebuffer_bool( &buf, true );
     BOOST_CHECK_EQUAL(result, true);
-    result = pack_simplebuffer_float( &buf, FLT_MAX/2 );
+    result = pack_simplebuffer_float( &buf, 1234.5 );
     BOOST_CHECK_EQUAL(result, true);
-    result = pack_simplebuffer_float( &buf, FLT_MIN/2 );
+    result = pack_simplebuffer_float( &buf, -1234.5 );
     BOOST_CHECK_EQUAL(result, true);
 #ifdef SUPPORT_64BIT_VALUE
-    result = pack_simplebuffer_double( &buf, FLT_MAX*2 );
+    result = pack_simplebuffer_double( &buf, 1234.123456 );
     BOOST_CHECK_EQUAL(result, true);
-    result = pack_simplebuffer_double( &buf, FLT_MIN*2 );
+    result = pack_simplebuffer_double( &buf, -1234.123456 );
     BOOST_CHECK_EQUAL(result, true);
 #endif
     result = pack_simplebuffer_fixuint( &buf, 0 );
