@@ -43,4 +43,4 @@ include $(TOOLDIR)/gcc.mk
 
 .PHONY:run-test
 run-test: all
-	./build_Data/build --output_format=xml --log_level=all --log_sink=log.xml --report_sink=report.xml
+	-./build_Data/build --output_format=xml --log_level=all --log_sink=log.xml --report_sink=report.xml
