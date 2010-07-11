@@ -23,7 +23,7 @@ Running TestSuite <xsl:value-of select="@name"/>
 </xsl:template>
 
 
-<xsl:template match="TestLog">
+<xsl:template match="TestLog/TestSuite">
 <xsl:for-each select="TestSuite">
 <xsl:call-template name="testsuite"/>
 </xsl:for-each>

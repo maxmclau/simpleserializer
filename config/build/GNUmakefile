@@ -41,6 +41,14 @@ SRCDIRS += $(PROJ_ROOT)/src/tests
 include $(TOOLDIR)/common.mk
 include $(TOOLDIR)/gcc.mk
 
+#LOG_LEVEL:=all
+LOG_LEVEL:=error
+
 .PHONY:run-test
 run-test: all
-	-./build_Data/build --output_format=xml --log_level=all --log_sink=log.xml --report_sink=report.xml
+	-@./build_Data/build --output_format=xml \
+		--log_level=$(LOG_LEVEL) \
+		--log_sink=log.xml \
+		--report_sink=report.xml
+	@xsltproc $(TOOLDIR)/report.xsl report.xml >report.html
+	@xsltproc $(TOOLDIR)/log_convert.xsl log.xml
