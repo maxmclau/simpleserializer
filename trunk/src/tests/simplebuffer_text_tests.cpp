@@ -22,10 +22,8 @@
  *  SOFTWARE.
  */
 
-#include <boost/test/unit_test.hpp>
 #include <float.h>
-
-using boost::unit_test_framework::test_suite;
+#include "test.hpp"
 
 extern "C"
 {
@@ -37,36 +35,39 @@ extern "C"
 
 #include "test_data.h"
 
-void pack_simplebuffer_text_test( void )
+#include <cstdio>
+TEST_F( SimpleserializerTest, pack_simplebuffer_text_test )
 {
     simplebuffer text;
     simplebuffer serialized;
+
+    simplebuffer_system_init( 1024u,(uint8_t* (*)(size_t))malloc,(void (*)(void*))free );
     serialized = pack_simplebuffer_text( (char*)"true, false, 0, 1, 2, 3, 4, 0xff, 0x100, -100, 1.1f,-100.1010101010, \"ABC\", a, b, c, d, 0x10" );
     text = unpack_simplebuffer_text( serialized );
     printf( "[%s]\n", (char*)text.data );
 }
 
-#include <cstdio>
-void unpack_simplebuffer_text_test( void )
+TEST_F( SimpleserializerTest, unpack_simplebuffer_text_test )
 {
     simplebuffer serialized;
     simplebuffer text;
+    simplebuffer_system_init( 1024u,(uint8_t* (*)(size_t))malloc,(void (*)(void*))free );
     simplebuffer_init( &serialized, (uint8_t*)numeric_data, sizeof( numeric_data ) );
     text = unpack_simplebuffer_text( serialized );
-    BOOST_CHECK_EQUAL( strcmp( "false, true, "
-                               "1234.500000f, -1234.500000f, 1234.123456lf, -1234.123456lf, "
-                               "0u, 127u, 128u, 255u, "
-                               "256u, 65535u, 65536u, 268435455u, "
-                               "-1d, -32d, -33d, -128d, -129d, -32768d, -32769d, -134217728d",
-                               (char *)text.data ), 0 );
-
+    ASSERT_EQ( strcmp( "false, true, "
+                       "1234.500000f, -1234.500000f, 1234.123456lf, -1234.123456lf, "
+                       "0u, 127u, 128u, 255u, "
+                       "256u, 65535u, 65536u, 268435455u, "
+                       "-1d, -32d, -33d, -128d, -129d, -32768d, -32769d, -134217728d",
+                       (char *)text.data ), 0 );
+    
     simplebuffer_init( &serialized, (uint8_t*)raw_data, sizeof( raw_data ) );
     text = unpack_simplebuffer_text( serialized );
 
-    BOOST_CHECK_EQUAL( strcmp( "\"TEST\","
-                               " \"012345678901234567890123456789\","
-                               " \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcde\", ",
-                               (char *)text.data ), 0 );
+    ASSERT_EQ( strcmp( "\"TEST\","
+                       " \"012345678901234567890123456789\","
+                       " \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcde\", ",
+                       (char *)text.data ), 0 );
 
     simplebuffer_destroy( &serialized );
     simplebuffer_destroy( &text );
