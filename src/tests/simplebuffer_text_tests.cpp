@@ -22,17 +22,7 @@
  *  SOFTWARE.
  */
 
-#include <float.h>
 #include "test.hpp"
-
-extern "C"
-{
-#include <pack_simplebuffer_text.h>
-#include <unpack_simplebuffer_text.h>
-
-#include "../serializer/defines.h"
-}
-
 #include "test_data.h"
 
 #include <cstdio>
@@ -41,7 +31,6 @@ TEST_F( SimpleserializerTest, pack_simplebuffer_text_test )
     simplebuffer text;
     simplebuffer serialized;
 
-    simplebuffer_system_init( 1024u,(uint8_t* (*)(size_t))malloc,(void (*)(void*))free );
     serialized = pack_simplebuffer_text( (char*)"true, false, 0, 1, 2, 3, 4, 0xff, 0x100, -100, 1.1f,-100.1010101010, \"ABC\", a, b, c, d, 0x10" );
     text = unpack_simplebuffer_text( serialized );
     printf( "[%s]\n", (char*)text.data );
@@ -51,7 +40,7 @@ TEST_F( SimpleserializerTest, unpack_simplebuffer_text_test )
 {
     simplebuffer serialized;
     simplebuffer text;
-    simplebuffer_system_init( 1024u,(uint8_t* (*)(size_t))malloc,(void (*)(void*))free );
+
     simplebuffer_init( &serialized, (uint8_t*)numeric_data, sizeof( numeric_data ) );
     text = unpack_simplebuffer_text( serialized );
     ASSERT_EQ( strcmp( "false, true, "
