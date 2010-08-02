@@ -109,7 +109,7 @@ int pack_uint32( uint8_t* buffer, uint32_t data )
 
 int pack_fixint( uint8_t* buffer, int8_t data )
 {
-    PACK_8BIT_VALUE( buffer, (TYPE_FIXROW | (unsigned char)data) );
+    PACK_8BIT_VALUE( buffer, (TYPE_FIXRAW | (unsigned char)data) );
     return 1;
 }
 
@@ -192,7 +192,7 @@ int pack_raw_header( uint8_t* buffer, size_t data_size )
     int size = 0;
     if( data_size < 32 )
     {
-        *buffer++ = TYPE_FIXROW | (unsigned char)data_size;
+        *buffer++ = TYPE_FIXRAW | (unsigned char)data_size;
         size = 1;
     }
     else if( data_size < 0x10000 )

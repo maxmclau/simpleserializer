@@ -167,11 +167,11 @@ unpack_base_info_t unpack_base( uint8_t* buf )
             info.type = TYPE_NEGATIVE_FIXNUM;
             info.value.int8_value = (int8_t)(header);
         }
-        else if( (header & TYPE_FIXROW_MASK) == TYPE_FIXROW )
+        else if( (header & TYPE_FIXRAW_MASK) == TYPE_FIXRAW )
         {
             info.size = 1;
-            info.type = TYPE_FIXROW;
-            info.value.size = (size_t)(header & ~TYPE_FIXROW_MASK);
+            info.type = TYPE_FIXRAW;
+            info.value.size = (size_t)(header & ~TYPE_FIXRAW_MASK);
         }
 #if 0
         else if( (header & TYPE_FIXARRAY_MASK) ==  TYPE_FIXARRAY )
@@ -245,7 +245,7 @@ int unpack( unpack_info_t *info, uint8_t* buf )
         info->type = UNPACK_TYPE_INT;
         info->value.int_value = (int)info_base.value.int32_value;
     }
-    else if( info_base.type == TYPE_FIXROW ||
+    else if( info_base.type == TYPE_FIXRAW ||
              info_base.type == TYPE_VALIABLE_RAW16 ||
              info_base.type == TYPE_VALIABLE_RAW32 )
     {

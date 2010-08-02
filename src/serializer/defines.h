@@ -31,8 +31,8 @@
 #define TYPE_NEGATIVE_FIXNUM       (0xe0)
 #define TYPE_NEGATIVE_FIXNUM_MASK  (0xe0)
 
-#define TYPE_FIXROW                (0xa0)
-#define TYPE_FIXROW_MASK           (0xe0)
+#define TYPE_FIXRAW                (0xa0)
+#define TYPE_FIXRAW_MASK           (0xe0)
 
 #define TYPE_FIXARRAY              (0x90)
 #define TYPE_FIXARRAY_MASK         (0xe0)
@@ -44,8 +44,8 @@
 #define TYPE_VALIABLE_MASK         (0xe0)
 
 #define TYPE_VALIABLE_NIL     (0xc0) ///< シリアライズデータヘッダ(NIL     )
-#define TYPE_VALIABLE_FALSE   (0xc4) ///< シリアライズデータヘッダ(FALSE   )
-#define TYPE_VALIABLE_TRUE    (0xc8) ///< シリアライズデータヘッダ(TRUE    )
+#define TYPE_VALIABLE_FALSE   (0xc2) ///< シリアライズデータヘッダ(FALSE   )
+#define TYPE_VALIABLE_TRUE    (0xc3) ///< シリアライズデータヘッダ(TRUE    )
 
 #define TYPE_VALIABLE_FLOAT   (0xca) ///< シリアライズデータヘッダ(FLOAT   )
 #define TYPE_VALIABLE_DOUBLE  (0xcb) ///< シリアライズデータヘッダ(DOUBLE  )
@@ -60,13 +60,13 @@
 #define TYPE_VALIABLE_INT32   (0xd2) ///< シリアライズデータヘッダ(INT32   )
 #define TYPE_VALIABLE_INT64   (0xd3) ///< シリアライズデータヘッダ(INT64   )
 
-#define TYPE_VALIABLE_RAW16   (0xc1) ///< シリアライズデータヘッダ(RAW16   )
-#define TYPE_VALIABLE_RAW32   (0xc2) ///< シリアライズデータヘッダ(RAW32   )
+#define TYPE_VALIABLE_RAW16   (0xda) ///< シリアライズデータヘッダ(RAW16   )
+#define TYPE_VALIABLE_RAW32   (0xdb) ///< シリアライズデータヘッダ(RAW32   )
 
-#define TYPE_VALIABLE_ARRAY16 (0xc5) ///< シリアライズデータヘッダ(ARRAY16 )
-#define TYPE_VALIABLE_ARRAY32 (0xc6) ///< シリアライズデータヘッダ(ARRAY32 )
+#define TYPE_VALIABLE_ARRAY16 (0xdc) ///< シリアライズデータヘッダ(ARRAY16 )
+#define TYPE_VALIABLE_ARRAY32 (0xdd) ///< シリアライズデータヘッダ(ARRAY32 )
 
-#define TYPE_VALIABLE_MAP16   (0xd5) ///< シリアライズデータヘッダ(MAP16   )
-#define TYPE_VALIABLE_MAP32   (0xd6) ///< シリアライズデータヘッダ(MAP32   )
+#define TYPE_VALIABLE_MAP16   (0xde) ///< シリアライズデータヘッダ(MAP16   )
+#define TYPE_VALIABLE_MAP32   (0xdf) ///< シリアライズデータヘッダ(MAP32   )
 
 #endif //H_DEFINES_H_100629201617__
