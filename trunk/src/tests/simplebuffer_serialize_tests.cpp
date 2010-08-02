@@ -22,15 +22,6 @@
  *  SOFTWARE.
  */
 
-#include <float.h>
-
-extern "C"
-{
-#include <pack_simplebuffer.h>
-
-#include "../serializer/defines.h"
-}
-
 #include "test.hpp"
 #include "test_data.h"
 
@@ -38,9 +29,6 @@ TEST_F( SimpleserializerTest, pack_simplebuffer_test_numeric )
 {
     simplebuffer buf;
     bool result;
-    simplebuffer_system_init( 1024u,
-                              (uint8_t* (*)(size_t))malloc,
-                              (void (*)(void*))free );
 
     simplebuffer_init( &buf, NULL, 0 );
 

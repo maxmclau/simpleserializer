@@ -22,16 +22,6 @@
  *  SOFTWARE.
  */
 
-#include <float.h>
-
-extern "C"
-{
-#include <pack.h>
-#include <unpack.h>
-
-#include "../serializer/defines.h"
-}
-
 #include "test.hpp"
 #include "test_data.h"
 

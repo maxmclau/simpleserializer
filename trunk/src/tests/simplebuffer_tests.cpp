@@ -22,11 +22,6 @@
  *  SOFTWARE.
  */
 
-extern "C"
-{
-#include <simplebuffer.h>
-}
-
 #include "test.hpp"
 
 #include <cstdio>
@@ -34,10 +29,6 @@ TEST_F( SimpleserializerTest, simplebuffer_test )
 {
     simplebuffer sbuf;
     uint8_t* data;
-
-    simplebuffer_system_init( 1024u,
-                              (uint8_t* (*)(size_t))malloc,
-                              (void (*)(void*))free );
 
     simplebuffer_init( &sbuf, (uint8_t*)"TEST", 5 );
     ASSERT_TRUE( memcmp( sbuf.data, "TEST", 5 ) == 0 );
