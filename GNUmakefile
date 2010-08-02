@@ -44,6 +44,4 @@ LOG_LEVEL:=error
 
 .PHONY:run-test
 run-test: all
-	-@$(TARGET) --output_format=xml --log_level=$(LOG_LEVEL) --log_sink=$(OUTDIR)/log.xml --report_sink=$(OUTDIR)/report.xml
-	@xsltproc $(TOOLDIR)/report.xsl $(OUTDIR)/report.xml >$(OUTDIR)/report.html
-	@xsltproc $(TOOLDIR)/log_convert.xsl $(OUTDIR)/log.xml
+	@$(TARGET)
